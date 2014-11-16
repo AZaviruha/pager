@@ -1,5 +1,5 @@
 {
-  "name": "pager",
+  "name": "react-pager",
   "version": "1.0.0",
   "description": "React <Pager> component (stateless).",
   "scripts": {
@@ -12,7 +12,11 @@
     "paginator",
     "bootstrap"
   ],
-  "author": "a.zaviruha <a.zaviruha@gmail.com>",
+  "author": "Alexei Zaviruha <a.zaviruha@gmail.com>",
+  "repository": {
+      "type": "git",
+      "url": "git@github.com:AZaviruha/pager.git"
+  },
   "license": "MIT",
   "dependencies": {
     "react": "^0.12.0"
