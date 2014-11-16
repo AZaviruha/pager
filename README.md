@@ -1,10 +1,30 @@
 # Stateless Pager component.
 ## Usage
 ```
-<Pager current={3}
-       total={20}
-       visiblePages={5}
-       onPageChanged={this.handlePageChanged} />
+var Pager = require( 'react-pager' );
+
+var PagerDemo = React.createClass({
+    getInitialState: function () {
+        return {
+            total:       11,
+            current:     7,
+            visiblePage: 3
+        };
+    },
+    
+    handlePageChanged: function ( newPage ) {
+        this.setState({ current : newPage });
+    },
+    
+    render: function() {
+        return (<Pager total={this.state.total}
+                       current={this.state.current}
+                       visiblePages={this.state.visiblePage}
+                       onPageChanged={this.handlePageChanged}/>);
+    }
+});
+
+React.render(<PagerDemo />, document.body);
 ```
 
 ## How it looks like*
