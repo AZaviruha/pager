@@ -4,11 +4,17 @@ var gulp       = require( 'gulp' )
   , concat     = require( 'gulp-concat' )
   , browserify = require( 'gulp-browserify' );
 
+gulp.task( 'build-min', function () {
+    return gulp.src( 'src/pager.jsx' )
+               .pipe( react() )
+               .pipe( uglify() )
+               .pipe( concat( 'pager.min.js' ) )
+               .pipe( gulp.dest( 'dist/' ) );
+});
+
 gulp.task( 'build', function () {
     return gulp.src( 'src/pager.jsx' )
                .pipe( react() )
-               .pipe( browserify() )
-               .pipe( uglify() )
-               .pipe( concat( 'pager.min.js' ) )
+               .pipe( concat( 'pager.js' ) )
                .pipe( gulp.dest( 'dist/' ) );
 });

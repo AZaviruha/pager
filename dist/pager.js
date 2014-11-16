@@ -16,6 +16,7 @@
  * First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
  * ```
  *
+ * @author a.zaviruha, 12.11.2014
  */
 
 var React = require( 'react' );
@@ -31,7 +32,7 @@ var BASE_SHIFT  = 0
 /**
  * ## Constructor
  */
-var Pager = React.createClass({
+var Pager = React.createClass({displayName: 'Pager',
     propTypes: {
         current:               React.PropTypes.number.isRequired,
         total:                 React.PropTypes.number.isRequired,
@@ -139,33 +140,33 @@ var Pager = React.createClass({
     /* ========================= RENDERS ==============================*/
     render: function () {
         return (
-            <nav>
-                <ul className="pagination">
-                    <Page className="btn-first-page"
-                          isDisabled={this.isPrevDisabled()} 
-                          onClick={this.handleFirstPage}>{'First'}</Page>
+            React.createElement("nav", null, 
+                React.createElement("ul", {className: "pagination"}, 
+                    React.createElement(Page, {className: "btn-first-page", 
+                          isDisabled: this.isPrevDisabled(), 
+                          onClick: this.handleFirstPage}, 'First'), 
 
-                    <Page className="btn-prev-page"
-                          isDisabled={this.isPrevDisabled()} 
-                          onClick={this.handlePreviousPage}>{'\u00AB'}</Page>
+                    React.createElement(Page, {className: "btn-prev-page", 
+                          isDisabled: this.isPrevDisabled(), 
+                          onClick: this.handlePreviousPage}, '\u00AB'), 
 
-                    <Page isHidden={this.isPrevMoreHidden()}
-                          onClick={this.handleMorePrevPages}>...</Page>
+                    React.createElement(Page, {isHidden: this.isPrevMoreHidden(), 
+                          onClick: this.handleMorePrevPages}, "..."), 
 
-                    {this.renderPages( this.visibleRange() )}
+                    this.renderPages( this.visibleRange()), 
 
-                    <Page isHidden={this.isNextMoreHidden()}
-                          onClick={this.handleMoreNextPages}>...</Page>
+                    React.createElement(Page, {isHidden: this.isNextMoreHidden(), 
+                          onClick: this.handleMoreNextPages}, "..."), 
 
-                    <Page className="btn-next-page"
-                          isDisabled={this.isNextDisabled()}
-                          onClick={this.handleNextPage}>{'\u00BB'}</Page>
+                    React.createElement(Page, {className: "btn-next-page", 
+                          isDisabled: this.isNextDisabled(), 
+                          onClick: this.handleNextPage}, '\u00BB'), 
 
-                    <Page className="btn-last-page"
-                          isDisabled={this.isNextDisabled()}
-                          onClick={this.handleLastPage}>{'Last'}</Page>
-                </ul>
-            </nav>
+                    React.createElement(Page, {className: "btn-last-page", 
+                          isDisabled: this.isNextDisabled(), 
+                          onClick: this.handleLastPage}, 'Last')
+                )
+            )
         );
     },
 
@@ -184,15 +185,15 @@ var Pager = React.createClass({
               , onClick = self.handlePageChanged.bind(null, current)
               , isActive = (self.props.current === current);
 
-            return (<Page key={idx} isActive={isActive}
-                          onClick={onClick}>{el}</Page>);
+            return (React.createElement(Page, {key: idx, isActive: isActive, 
+                          onClick: onClick}, el));
         });
     }
 });
 
 
 
-var Page = React.createClass({
+var Page = React.createClass({displayName: 'Page',
     render: function () {
         if ( this.props.isHidden ) return null;
 
@@ -201,9 +202,9 @@ var Page = React.createClass({
                   + (this.props.isDisabled ? ' disabled' : '');
 
         return (
-            <li key={this.props.key} className={css}>
-                <a onClick={this.props.onClick}>{this.props.children}</a>
-            </li>
+            React.createElement("li", {key: this.props.key, className: css}, 
+                React.createElement("a", {onClick: this.props.onClick}, this.props.children)
+            )
         );
     }
 });    
