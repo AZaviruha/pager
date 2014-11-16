@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 /**
- * # Stateless Pager component.
+ * # Stateless Pager component
  *
  * ## Usage
  * ```

@@ -1,4 +1,4 @@
-# Stateless Pager component.
+# Stateless Pager component
 ## Usage
 ```
 var Pager = require( 'react-pager' );
