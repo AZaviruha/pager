@@ -19,7 +19,7 @@
  * @author a.zaviruha, 12.11.2014
  */
 
-var React = require( 'react' );
+// var React = require( 'react' );
 
 
 /**
@@ -141,7 +141,7 @@ var Pager = React.createClass({
     render: function () {
         return (
             <nav>
-                <ul className="pagination" style={style}>
+                <ul className="pagination">
                     <Page className="btn-first-page"
                           isDisabled={this.isPrevDisabled()} 
                           onClick={this.handleFirstPage}>{'First'}</Page>
@@ -220,4 +220,5 @@ function range ( start, end ) {
     return res; 
 }
 
-module.exports = Pager;
+window.Pager = Pager;
+// module.exports = Pager;
