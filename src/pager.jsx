@@ -19,7 +19,7 @@
  * @author a.zaviruha, 12.11.2014
  */
 
-// var React = require( 'react' );
+var React = require( 'react' );
 
 
 /**
@@ -220,5 +220,4 @@ function range ( start, end ) {
     return res; 
 }
 
-window.Pager = Pager;
-// module.exports = Pager;
+module.exports = Pager;
