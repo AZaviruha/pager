@@ -35,7 +35,8 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 * Bootstrap 3.0 is required by default, but you can replace it with your own css.
 
 ## Demo
-http://jsfiddle.net/azaviruha/kb3gN/7742/
+JSFiddle: http://jsfiddle.net/azaviruha/kb3gN/7742/
+Local:    https://github.com/AZaviruha/demo-master-detail
 
 
 ## TODO
