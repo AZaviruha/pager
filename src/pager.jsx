@@ -220,5 +220,4 @@ function range ( start, end ) {
     return res; 
 }
 
-
 module.exports = Pager;
