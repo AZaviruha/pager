@@ -1,10 +1,12 @@
 {
   "name": "react-pager",
-  "version": "1.0.0",
-  "description": "React <Pager> component (stateless).",
+  "version": "1.0.2",
+  "description": "Stateless Pager component.",
+  "main": "src/pager.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bugs": "https://github.com/AZaviruha/pager/issues",
   "keywords": [
     "react",
     "react-component",

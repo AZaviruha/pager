@@ -16,3 +16,6 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 
 ## Demo
 http://jsfiddle.net/azaviruha/kb3gN/7740/
+
+## TODO
+* Write tests
