@@ -36,6 +36,7 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 
 ## Demo
 JSFiddle: http://jsfiddle.net/azaviruha/kb3gN/7742/
+
 Local:    https://github.com/AZaviruha/demo-master-detail
 
 
