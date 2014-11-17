@@ -6,9 +6,9 @@ var Pager = require( 'react-pager' );
 var PagerDemo = React.createClass({
     getInitialState: function () {
         return {
-            total:       11,
-            current:     7,
-            visiblePage: 3
+            total:        11,
+            current:      7,
+            visiblePages: 3
         };
     },
     
@@ -19,7 +19,7 @@ var PagerDemo = React.createClass({
     render: function() {
         return (<Pager total={this.state.total}
                        current={this.state.current}
-                       visiblePages={this.state.visiblePage}
+                       visiblePages={this.state.visiblePages}
                        onPageChanged={this.handlePageChanged}/>);
     }
 });
