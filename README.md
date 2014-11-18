@@ -45,4 +45,4 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 * Write tests
 
 [npm-image]: https://img.shields.io/npm/v/mz.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/mz
+[npm-url]: https://www.npmjs.org/package/react-pager
