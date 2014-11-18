@@ -1,5 +1,5 @@
 # Stateless Pager component
-[![NPM version][npm-image]][npm-url]
+
 
 ## Usage
 ```
