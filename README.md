@@ -1,4 +1,6 @@
 # Stateless Pager component
+[![NPM version][npm-image]][npm-url]
+
 ## Usage
 ```
 var Pager = require( 'react-pager' );
@@ -41,3 +43,6 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 
 ## TODO
 * Write tests
+
+[npm-image]: https://img.shields.io/npm/v/mz.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/mz
