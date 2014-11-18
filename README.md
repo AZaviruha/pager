@@ -1,5 +1,5 @@
 # Stateless Pager component
-
+[![NPM version][npm-image]][npm-url]
 
 ## Usage
 ```
@@ -44,5 +44,5 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 ## TODO
 * Write tests
 
-[npm-image]: https://img.shields.io/npm/v/mz.svg?style=flat-square
+[npm-image]: http://img.shields.io/badge/npm-v1.0.4-green.svg
 [npm-url]: https://www.npmjs.org/package/react-pager
