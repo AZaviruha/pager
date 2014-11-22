@@ -1,7 +1,7 @@
 module.exports = function(config) {
     config.set({
         basePath:    './',
-        frameworks:  [ 'jasmine'  /*, 'browserify'*/ ],
+        frameworks:  [ 'jasmine' ],
         browsers:    [ 'PhantomJS' /*, 'Chrome'*/ ],
         singleRun:   true,
         plugins : [
@@ -9,7 +9,6 @@ module.exports = function(config) {
             'karma-firefox-launcher',
 	    'karma-phantomjs-launcher',
             'karma-jasmine'
-            // 'karma-browserifast'
         ],
         files: [
             { 
@@ -19,21 +18,8 @@ module.exports = function(config) {
                 served:   true
             }, 
         ],
-        // browserify: {
-        //     files: [
-        //         {
-        //             pattern: 'spec/bundle.spec.js',
-        //             watched:  true,
-        //             included: true,
-        //             served:   true
-        //         }
-        //     ]
-        // },
-        // preprocessors: {
-        //     '/**/*.browserify': 'browserify'
-        // },
         reporters: [ 'progress' ],
-        colors: true,
-        logLevel: config.LOG_DEBUG
+        colors: true
+        // logLevel: config.LOG_DEBUG
     });
 };

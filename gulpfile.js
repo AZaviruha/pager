@@ -5,6 +5,7 @@ var gulp       = require( 'gulp' )
   , browserify = require( 'gulp-browserify' )
   , karma      = require( 'karma' ).server;
 
+
 // Builds minified version for <script>
 gulp.task( 'build-min', function () {
     return gulp.src( 'src/pager.jsx' )
@@ -35,14 +36,6 @@ gulp.task( 'build-tests', [ 'build' ], function () {
 
 
 // Runs unit-tests
-// var os    = require( 'os' )
-//   , isWin = /win*./.test( os.platform() );
-// gulp.task( 'test', [ 'build-tests' ], shell.task([
-//     isWin 
-//         ? 'node_modules\\karma\\bin\\karma start karma.conf.js'
-//         : './node_modules/karma/bin/karma start ./karma.conf.js'
-// ]));
-
 gulp.task( 'test', [ 'build-tests' ], function ( done ) {
     karma.start({
         configFile: __dirname + '/karma.conf.js'
