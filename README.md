@@ -64,7 +64,7 @@ npm test
 * Add MORE tests
 
 
-[npm-image]: http://img.shields.io/badge/npm-v1.0.4-green.svg
+[npm-image]: http://img.shields.io/badge/npm-v1.0.5-green.svg
 [npm-url]: https://www.npmjs.org/package/react-pager
 [cc-image]: https://codeclimate.com/github/AZaviruha/pager/badges/gpa.svg
 [cc-url]: https://codeclimate.com/github/AZaviruha/pager
