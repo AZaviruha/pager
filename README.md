@@ -9,7 +9,7 @@ var Pager = require( 'react-pager' );
 ```
 
 ### Global scripts
-dist/pager.min.js is prebuilded for using in global <script> tag.
+dist/pager.min.js is prebuilded for using in global `<script>` tag.
 (It's used in JSFiddle demo).
 
 
