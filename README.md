@@ -1,5 +1,6 @@
 # Stateless Pager component
 [![NPM version][npm-image]][npm-url]
+[![Code Climate][cc-image]][cc-url]
 
 ## Usage
 ```
@@ -46,3 +47,5 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 
 [npm-image]: http://img.shields.io/badge/npm-v1.0.4-green.svg
 [npm-url]: https://www.npmjs.org/package/react-pager
+[cc-image]: https://codeclimate.com/github/AZaviruha/pager/badges/gpa.svg
+[cc-url]: https://codeclimate.com/github/AZaviruha/pager

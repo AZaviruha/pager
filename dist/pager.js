@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 /**
- * # Stateless Pager component.
+ * # Stateless Pager component
  *
  * ## Usage
  * ```
@@ -16,7 +16,6 @@
  * First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
  * ```
  *
- * @author a.zaviruha, 12.11.2014
  */
 
 var React = require( 'react' );
@@ -186,6 +185,7 @@ var Pager = React.createClass({displayName: 'Pager',
               , isActive = (self.props.current === current);
 
             return (React.createElement(Page, {key: idx, isActive: isActive, 
+                          className: "btn-numbered-page", 
                           onClick: onClick}, el));
         });
     }
@@ -197,7 +197,7 @@ var Page = React.createClass({displayName: 'Page',
     render: function () {
         if ( this.props.isHidden ) return null;
 
-        var css = (this.props.className || '')
+        var css = ((this.props.className + ' ') || '')
                   + (this.props.isActive ? 'active' : '')
                   + (this.props.isDisabled ? ' disabled' : '');
 
