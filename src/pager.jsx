@@ -195,11 +195,13 @@ var Pager = React.createClass({
 
 var Page = React.createClass({
     render: function () {
-        if ( this.props.isHidden ) return null;
+        var props = this.props;
+        if ( props.isHidden ) return null;
 
-        var css = ((this.props.className + ' ') || '')
-                  + (this.props.isActive ? 'active' : '')
-                  + (this.props.isDisabled ? ' disabled' : '');
+        var baseCss = props.className ? props.className + ' ' : ''
+          , css     = baseCss
+                      + (props.isActive ? 'active' : '')
+                      + (props.isDisabled ? ' disabled' : '');
 
         return (
             <li key={this.props.key} className={css}>
@@ -221,3 +223,4 @@ function range ( start, end ) {
 }
 
 module.exports = Pager;
+// window.Pager = Pager;

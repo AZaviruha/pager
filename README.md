@@ -52,7 +52,7 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 
 
 ## Demo
-* [JSFiddle](http://jsfiddle.net/kb3gN/8004/)
+* [JSFiddle](http://jsfiddle.net/azaviruha/kb3gN/8573/)
 * [Local](https://github.com/AZaviruha/demo-master-detail)
 
 
@@ -63,6 +63,13 @@ npm test
 
 ## TODO
 * Add MORE tests
+
+
+## Changelog
+
+### v1.0.6
+* Fixed `<li class="undefined" ..` in "more" and "less" buttons.
+* Added a few unit-tests.
 
 
 [npm-image]: http://img.shields.io/badge/npm-v1.0.5-green.svg
