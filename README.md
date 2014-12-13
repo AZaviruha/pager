@@ -1,6 +1,7 @@
 # Stateless Pager component
 [![NPM version][npm-image]][npm-url]
 [![Code Climate][cc-image]][cc-url]
+[![Build Status][travis-image]][travis-url]
 
 
 ## Getting started
@@ -76,3 +77,5 @@ npm test
 [npm-url]: https://www.npmjs.org/package/react-pager
 [cc-image]: https://codeclimate.com/github/AZaviruha/pager/badges/gpa.svg
 [cc-url]: https://codeclimate.com/github/AZaviruha/pager
+[travis-image]: https://travis-ci.org/AZaviruha/pager.svg?branch=master
+[travis-url]: https://travis-ci.org/AZaviruha/pager
