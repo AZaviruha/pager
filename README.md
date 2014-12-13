@@ -62,10 +62,6 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 npm test
 ```
 
-## TODO
-* Add MORE tests
-
-
 ## Changelog
 
 ### v1.0.6
