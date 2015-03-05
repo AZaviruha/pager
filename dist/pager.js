@@ -8,7 +8,15 @@
  * <Pager current={3}
  *        total={20}
  *        visiblePages={5}
- *        onPageChanged={this.handlePageChanged} />
+ *        onPageChanged={this.handlePageChanged}
+ *        titles={{
+ *            first:   "First",
+ *            prev:    "Prev",
+ *            prevSet: "<<<",
+ *            nextSet: ">>>",
+ *            next:    "Next",
+ *            last:    "Last"
+ *        }} />
  * ```
  *
  * ## How it looks like
@@ -25,17 +33,25 @@ var React = require( 'react' );
  * ## Constants
  */
 var BASE_SHIFT  = 0
-  , TITLE_SHIFT = 1;
-
+  , TITLE_SHIFT = 1
+  , TITLES = {
+        first:   'First',
+        prev:    '\u00AB',
+        prevSet: '...',
+        nextSet: '...',
+        next:    '\u00BB',
+        last:    'Last'
+    };
 
 /**
  * ## Constructor
  */
-var Pager = React.createClass({displayName: 'Pager',
+var Pager = React.createClass({displayName: "Pager",
     propTypes: {
         current:               React.PropTypes.number.isRequired,
         total:                 React.PropTypes.number.isRequired,
-        visiblePages:       React.PropTypes.number.isRequired,
+        visiblePages:          React.PropTypes.number.isRequired,
+        titles:                React.PropTypes.object,
 
         onPageChanged:         React.PropTypes.func,
         onPageSizeChanged:     React.PropTypes.func
@@ -136,34 +152,41 @@ var Pager = React.createClass({displayName: 'Pager',
     },
 
     
+    getTitles: function ( key ) {
+        var pTitles = this.props.titles || {};
+        return pTitles[ key ] || TITLES[ key ];
+    },
+    
     /* ========================= RENDERS ==============================*/
     render: function () {
+        var titles = this.getTitles;
+
         return (
             React.createElement("nav", null, 
                 React.createElement("ul", {className: "pagination"}, 
                     React.createElement(Page, {className: "btn-first-page", 
                           isDisabled: this.isPrevDisabled(), 
-                          onClick: this.handleFirstPage}, 'First'), 
+                          onClick: this.handleFirstPage}, titles('first')), 
 
                     React.createElement(Page, {className: "btn-prev-page", 
                           isDisabled: this.isPrevDisabled(), 
-                          onClick: this.handlePreviousPage}, '\u00AB'), 
+                          onClick: this.handlePreviousPage}, titles('prev')), 
 
                     React.createElement(Page, {isHidden: this.isPrevMoreHidden(), 
-                          onClick: this.handleMorePrevPages}, "..."), 
+                          onClick: this.handleMorePrevPages}, titles('prevSet')), 
 
                     this.renderPages( this.visibleRange()), 
 
                     React.createElement(Page, {isHidden: this.isNextMoreHidden(), 
-                          onClick: this.handleMoreNextPages}, "..."), 
+                          onClick: this.handleMoreNextPages}, titles('nextSet')), 
 
                     React.createElement(Page, {className: "btn-next-page", 
                           isDisabled: this.isNextDisabled(), 
-                          onClick: this.handleNextPage}, '\u00BB'), 
+                          onClick: this.handleNextPage}, titles('next')), 
 
                     React.createElement(Page, {className: "btn-last-page", 
                           isDisabled: this.isNextDisabled(), 
-                          onClick: this.handleLastPage}, 'Last')
+                          onClick: this.handleLastPage}, titles('last'))
                 )
             )
         );
@@ -193,7 +216,7 @@ var Pager = React.createClass({displayName: 'Pager',
 
 
 
-var Page = React.createClass({displayName: 'Page',
+var Page = React.createClass({displayName: "Page",
     render: function () {
         var props = this.props;
         if ( props.isHidden ) return null;
@@ -223,4 +246,3 @@ function range ( start, end ) {
 }
 
 module.exports = Pager;
-// window.Pager = Pager;

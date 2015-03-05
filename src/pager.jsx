@@ -8,7 +8,15 @@
  * <Pager current={3}
  *        total={20}
  *        visiblePages={5}
- *        onPageChanged={this.handlePageChanged} />
+ *        onPageChanged={this.handlePageChanged}
+ *        titles={{
+ *            first:   "First",
+ *            prev:    "Prev",
+ *            prevSet: "<<<",
+ *            nextSet: ">>>",
+ *            next:    "Next",
+ *            last:    "Last"
+ *        }} />
  * ```
  *
  * ## How it looks like
@@ -25,8 +33,15 @@ var React = require( 'react' );
  * ## Constants
  */
 var BASE_SHIFT  = 0
-  , TITLE_SHIFT = 1;
-
+  , TITLE_SHIFT = 1
+  , TITLES = {
+        first:   'First',
+        prev:    '\u00AB',
+        prevSet: '...',
+        nextSet: '...',
+        next:    '\u00BB',
+        last:    'Last'
+    };
 
 /**
  * ## Constructor
@@ -35,7 +50,8 @@ var Pager = React.createClass({
     propTypes: {
         current:               React.PropTypes.number.isRequired,
         total:                 React.PropTypes.number.isRequired,
-        visiblePages:       React.PropTypes.number.isRequired,
+        visiblePages:          React.PropTypes.number.isRequired,
+        titles:                React.PropTypes.object,
 
         onPageChanged:         React.PropTypes.func,
         onPageSizeChanged:     React.PropTypes.func
@@ -136,34 +152,41 @@ var Pager = React.createClass({
     },
 
     
+    getTitles: function ( key ) {
+        var pTitles = this.props.titles || {};
+        return pTitles[ key ] || TITLES[ key ];
+    },
+    
     /* ========================= RENDERS ==============================*/
     render: function () {
+        var titles = this.getTitles;
+
         return (
             <nav>
                 <ul className="pagination">
                     <Page className="btn-first-page"
                           isDisabled={this.isPrevDisabled()} 
-                          onClick={this.handleFirstPage}>{'First'}</Page>
+                          onClick={this.handleFirstPage}>{titles('first')}</Page>
 
                     <Page className="btn-prev-page"
                           isDisabled={this.isPrevDisabled()} 
-                          onClick={this.handlePreviousPage}>{'\u00AB'}</Page>
+                          onClick={this.handlePreviousPage}>{titles('prev')}</Page>
 
                     <Page isHidden={this.isPrevMoreHidden()}
-                          onClick={this.handleMorePrevPages}>...</Page>
+                          onClick={this.handleMorePrevPages}>{titles('prevSet')}</Page>
 
                     {this.renderPages( this.visibleRange() )}
 
                     <Page isHidden={this.isNextMoreHidden()}
-                          onClick={this.handleMoreNextPages}>...</Page>
+                          onClick={this.handleMoreNextPages}>{titles('nextSet')}</Page>
 
                     <Page className="btn-next-page"
                           isDisabled={this.isNextDisabled()}
-                          onClick={this.handleNextPage}>{'\u00BB'}</Page>
+                          onClick={this.handleNextPage}>{titles('next')}</Page>
 
                     <Page className="btn-last-page"
                           isDisabled={this.isNextDisabled()}
-                          onClick={this.handleLastPage}>{'Last'}</Page>
+                          onClick={this.handleLastPage}>{titles('last')}</Page>
                 </ul>
             </nav>
         );
@@ -223,4 +246,3 @@ function range ( start, end ) {
 }
 
 module.exports = Pager;
-// window.Pager = Pager;

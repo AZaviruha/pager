@@ -35,6 +35,17 @@ var PagerDemo = React.createClass({
     render: function() {
         return (<Pager total={this.state.total}
                        current={this.state.current}
+                       
+                       {/* Optional */}
+                       titles={{
+                           first:   'First',
+                           prev:    '\u00AB',
+                           prevSet: '...',
+                           nextSet: '...',
+                           next:    '\u00BB',
+                           last:    'Last'
+                       }}
+                       
                        visiblePages={this.state.visiblePages}
                        onPageChanged={this.handlePageChanged}/>);
     }
@@ -64,12 +75,16 @@ npm test
 
 ## Changelog
 
+### v1.1.0
+* Added `titles` property. See [demo](http://jsfiddle.net/azaviruha/kb3gN/10213/).
+* Improved building script.
+
 ### v1.0.6
 * Fixed `<li class="undefined" ..` in "more" and "less" buttons.
 * Added a few unit-tests.
 
 
-[npm-image]: http://img.shields.io/badge/npm-v1.0.6-green.svg
+[npm-image]: http://img.shields.io/badge/npm-v1.1.1-green.svg
 [npm-url]: https://www.npmjs.org/package/react-pager
 [cc-image]: https://codeclimate.com/github/AZaviruha/pager/badges/gpa.svg
 [cc-url]: https://codeclimate.com/github/AZaviruha/pager

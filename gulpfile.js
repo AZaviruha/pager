@@ -2,18 +2,9 @@ var gulp       = require( 'gulp' )
   , react      = require( 'gulp-react' )
   , uglify     = require( 'gulp-uglify' )
   , concat     = require( 'gulp-concat' )
+  , replace    = require( 'gulp-replace' )
   , browserify = require( 'gulp-browserify' )
   , karma      = require( 'karma' ).server;
-
-
-// Builds minified version for <script>
-gulp.task( 'build-min', function () {
-    return gulp.src( 'src/pager.jsx' )
-               .pipe( react() )
-               .pipe( uglify() )
-               .pipe( concat( 'pager.min.js' ) )
-               .pipe( gulp.dest( 'dist/' ) );
-});
 
 
 // Builds version for require( 'react-pager' );
@@ -21,6 +12,19 @@ gulp.task( 'build', function () {
     return gulp.src( 'src/pager.jsx' )
                .pipe( react() )
                .pipe( concat( 'pager.js' ) )
+               .pipe( gulp.dest( 'dist/' ) );
+});
+
+
+// Builds version for <script>
+gulp.task( 'build-min-global', function () {
+    return gulp.src( 'src/pager.jsx' )
+               .pipe( react() )
+               .pipe( replace( "var React = require( 'react' );", '' ))
+               .pipe( replace( "module.exports = Pager;", 
+                               'window.Pager = window.Pager || Pager;'))
+               .pipe( uglify() )
+               .pipe( concat( 'pager.min.js' ) )
                .pipe( gulp.dest( 'dist/' ) );
 });
 
