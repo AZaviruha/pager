@@ -135,7 +135,7 @@ describe( "react-pager component", function () {
     });
     
 
-    it( "should render labels for buttons according to `title` prop", function () {
+    it( "should render labels for buttons according to `titles` prop", function () {
         var titles = {
             first:   '|<',
             prev:    '<',
