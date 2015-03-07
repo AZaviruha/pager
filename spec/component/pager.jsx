@@ -133,6 +133,38 @@ describe( "react-pager component", function () {
         TestUtils.Simulate.click( byTag( btnLastPage, 'a') );
         function handler ( next ) { expect( next ).toEqual( 19 ); }
     });
+    
+
+    it( "should render labels for buttons according to `title` prop", function () {
+        var titles = {
+            first:   '|<',
+            prev:    '<',
+            prevSet: '<#',
+            nextSet: '#>',
+            next:    '>',
+            last:    '>|'
+        };
+
+        var pager = TestUtils.renderIntoDocument(
+            <Pager current={3}
+                   total={20}
+                   visiblePages={5}
+                   titles={titles} />);
+
+
+        var btnFirstPage  = byClass( pager, 'btn-first-page' )
+          , btnPrevPage   = byClass( pager, 'btn-prev-page' )
+          //, btnPrevSet    = byClass( pager, 'btn-prev-more' )
+          , btnNextPage   = byClass( pager, 'btn-next-page' )
+          , btnNextSet    = byClass( pager, 'btn-next-more' )
+          , btnLastPage   = byClass( pager, 'btn-last-page' );
+
+        expect( btnFirstPage.getDOMNode().textContent ).toEqual( titles.first );
+        expect( btnPrevPage.getDOMNode().textContent ).toEqual( titles.prev );
+        expect( btnNextSet.getDOMNode().textContent ).toEqual( titles.nextSet );
+        expect( btnNextPage.getDOMNode().textContent ).toEqual( titles.next );
+        expect( btnLastPage.getDOMNode().textContent ).toEqual( titles.last );
+    });
 
 
     function generatePager ( c, t, v, f ) {

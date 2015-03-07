@@ -165,26 +165,34 @@ var Pager = React.createClass({displayName: "Pager",
             React.createElement("nav", null, 
                 React.createElement("ul", {className: "pagination"}, 
                     React.createElement(Page, {className: "btn-first-page", 
+                          key: "btn-first-page", 
                           isDisabled: this.isPrevDisabled(), 
                           onClick: this.handleFirstPage}, titles('first')), 
 
                     React.createElement(Page, {className: "btn-prev-page", 
+                          key: "btn-prev-page", 
                           isDisabled: this.isPrevDisabled(), 
                           onClick: this.handlePreviousPage}, titles('prev')), 
 
-                    React.createElement(Page, {isHidden: this.isPrevMoreHidden(), 
+                    React.createElement(Page, {className: "btn-prev-more", 
+                          key: "btn-prev-more", 
+                          isHidden: this.isPrevMoreHidden(), 
                           onClick: this.handleMorePrevPages}, titles('prevSet')), 
 
                     this.renderPages( this.visibleRange()), 
 
-                    React.createElement(Page, {isHidden: this.isNextMoreHidden(), 
+                    React.createElement(Page, {className: "btn-next-more", 
+                          key: "btn-next-more", 
+                          isHidden: this.isNextMoreHidden(), 
                           onClick: this.handleMoreNextPages}, titles('nextSet')), 
 
                     React.createElement(Page, {className: "btn-next-page", 
+                          key: "btn-next-page", 
                           isDisabled: this.isNextDisabled(), 
                           onClick: this.handleNextPage}, titles('next')), 
 
                     React.createElement(Page, {className: "btn-last-page", 
+                          key: "btn-last-page", 
                           isDisabled: this.isNextDisabled(), 
                           onClick: this.handleLastPage}, titles('last'))
                 )
