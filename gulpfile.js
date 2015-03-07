@@ -7,7 +7,7 @@ var gulp       = require( 'gulp' )
   , karma      = require( 'karma' ).server;
 
 
-// Builds version for require( 'react-pager' );
+// Builds version for "require( 'react-pager' );"
 gulp.task( 'build', function () {
     return gulp.src( 'src/pager.jsx' )
                .pipe( react() )
@@ -16,7 +16,7 @@ gulp.task( 'build', function () {
 });
 
 
-// Builds version for <script>
+// Builds version for "<script/>"
 gulp.task( 'build-min-global', function () {
     return gulp.src( 'src/pager.jsx' )
                .pipe( react() )

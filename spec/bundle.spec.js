@@ -9,7 +9,15 @@
  * <Pager current={3}
  *        total={20}
  *        visiblePages={5}
- *        onPageChanged={this.handlePageChanged} />
+ *        onPageChanged={this.handlePageChanged}
+ *        titles={{
+ *            first:   "First",
+ *            prev:    "Prev",
+ *            prevSet: "<<<",
+ *            nextSet: ">>>",
+ *            next:    "Next",
+ *            last:    "Last"
+ *        }} />
  * ```
  *
  * ## How it looks like
@@ -26,17 +34,25 @@ var React = require( 'react' );
  * ## Constants
  */
 var BASE_SHIFT  = 0
-  , TITLE_SHIFT = 1;
-
+  , TITLE_SHIFT = 1
+  , TITLES = {
+        first:   'First',
+        prev:    '\u00AB',
+        prevSet: '...',
+        nextSet: '...',
+        next:    '\u00BB',
+        last:    'Last'
+    };
 
 /**
  * ## Constructor
  */
-var Pager = React.createClass({displayName: 'Pager',
+var Pager = React.createClass({displayName: "Pager",
     propTypes: {
         current:               React.PropTypes.number.isRequired,
         total:                 React.PropTypes.number.isRequired,
-        visiblePages:       React.PropTypes.number.isRequired,
+        visiblePages:          React.PropTypes.number.isRequired,
+        titles:                React.PropTypes.object,
 
         onPageChanged:         React.PropTypes.func,
         onPageSizeChanged:     React.PropTypes.func
@@ -137,34 +153,41 @@ var Pager = React.createClass({displayName: 'Pager',
     },
 
     
+    getTitles: function ( key ) {
+        var pTitles = this.props.titles || {};
+        return pTitles[ key ] || TITLES[ key ];
+    },
+    
     /* ========================= RENDERS ==============================*/
     render: function () {
+        var titles = this.getTitles;
+
         return (
             React.createElement("nav", null, 
                 React.createElement("ul", {className: "pagination"}, 
                     React.createElement(Page, {className: "btn-first-page", 
                           isDisabled: this.isPrevDisabled(), 
-                          onClick: this.handleFirstPage}, 'First'), 
+                          onClick: this.handleFirstPage}, titles('first')), 
 
                     React.createElement(Page, {className: "btn-prev-page", 
                           isDisabled: this.isPrevDisabled(), 
-                          onClick: this.handlePreviousPage}, '\u00AB'), 
+                          onClick: this.handlePreviousPage}, titles('prev')), 
 
                     React.createElement(Page, {isHidden: this.isPrevMoreHidden(), 
-                          onClick: this.handleMorePrevPages}, "..."), 
+                          onClick: this.handleMorePrevPages}, titles('prevSet')), 
 
                     this.renderPages( this.visibleRange()), 
 
                     React.createElement(Page, {isHidden: this.isNextMoreHidden(), 
-                          onClick: this.handleMoreNextPages}, "..."), 
+                          onClick: this.handleMoreNextPages}, titles('nextSet')), 
 
                     React.createElement(Page, {className: "btn-next-page", 
                           isDisabled: this.isNextDisabled(), 
-                          onClick: this.handleNextPage}, '\u00BB'), 
+                          onClick: this.handleNextPage}, titles('next')), 
 
                     React.createElement(Page, {className: "btn-last-page", 
                           isDisabled: this.isNextDisabled(), 
-                          onClick: this.handleLastPage}, 'Last')
+                          onClick: this.handleLastPage}, titles('last'))
                 )
             )
         );
@@ -194,7 +217,7 @@ var Pager = React.createClass({displayName: 'Pager',
 
 
 
-var Page = React.createClass({displayName: 'Page',
+var Page = React.createClass({displayName: "Page",
     render: function () {
         var props = this.props;
         if ( props.isHidden ) return null;
@@ -234,12 +257,14 @@ module.exports = Pager;
 
 // vim: ts=4 sts=4 sw=4 expandtab
 
-//Add semicolon to prevent IIFE from being passed as argument to concated code.
+// Add semicolon to prevent IIFE from being passed as argument to concatenated code.
 ;
 
 // UMD (Universal Module Definition)
 // see https://github.com/umdjs/umd/blob/master/returnExports.js
 (function (root, factory) {
+    'use strict';
+    /*global define, exports, module */
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(factory);
@@ -276,134 +301,139 @@ var array_push = ArrayPrototype.push;
 var array_unshift = ArrayPrototype.unshift;
 var call = FunctionPrototype.call;
 
-// Having a toString local variable name breaks in Opera so use _toString.
-var _toString = ObjectPrototype.toString;
+// Having a toString local variable name breaks in Opera so use to_string.
+var to_string = ObjectPrototype.toString;
 
-var isFunction = function (val) {
-    return ObjectPrototype.toString.call(val) === '[object Function]';
+var isArray = Array.isArray || function isArray(obj) {
+    return to_string.call(obj) === '[object Array]';
 };
-var isRegex = function (val) {
-    return ObjectPrototype.toString.call(val) === '[object RegExp]';
-};
-var isArray = function isArray(obj) {
-    return _toString.call(obj) === "[object Array]";
-};
-var isString = function isString(obj) {
-    return _toString.call(obj) === "[object String]";
-};
+
+var hasToStringTag = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
+var isCallable; /* inlined from https://npmjs.com/is-callable */ var fnToStr = Function.prototype.toString, tryFunctionObject = function tryFunctionObject(value) { try { fnToStr.call(value); return true; } catch (e) { return false; } }, fnClass = '[object Function]', genClass = '[object GeneratorFunction]'; isCallable = function isCallable(value) { if (typeof value !== 'function') { return false; } if (hasToStringTag) { return tryFunctionObject(value); } var strClass = to_string.call(value); return strClass === fnClass || strClass === genClass; };
+var isRegex; /* inlined from https://npmjs.com/is-regex */ var regexExec = RegExp.prototype.exec, tryRegexExec = function tryRegexExec(value) { try { regexExec.call(value); return true; } catch (e) { return false; } }, regexClass = '[object RegExp]'; isRegex = function isRegex(value) { if (typeof value !== 'object') { return false; } return hasToStringTag ? tryRegexExec(value) : to_string.call(value) === regexClass; };
+var isString; /* inlined from https://npmjs.com/is-string */ var strValue = String.prototype.valueOf, tryStringObject = function tryStringObject(value) { try { strValue.call(value); return true; } catch (e) { return false; } }, stringClass = '[object String]'; isString = function isString(value) { if (typeof value === 'string') { return true; } if (typeof value !== 'object') { return false; } return hasToStringTag ? tryStringObject(value) : to_string.call(value) === stringClass; };
+
 var isArguments = function isArguments(value) {
-    var str = _toString.call(value);
+    var str = to_string.call(value);
     var isArgs = str === '[object Arguments]';
     if (!isArgs) {
-        isArgs = !isArray(value)
-            && value !== null
-            && typeof value === 'object'
-            && typeof value.length === 'number'
-            && value.length >= 0
-            && isFunction(value.callee);
+        isArgs = !isArray(value) &&
+          value !== null &&
+          typeof value === 'object' &&
+          typeof value.length === 'number' &&
+          value.length >= 0 &&
+          isCallable(value.callee);
     }
     return isArgs;
 };
 
-var supportsDescriptors = Object.defineProperty && (function () {
-    try {
-        Object.defineProperty({}, 'x', {});
-        return true;
-    } catch (e) { /* this is ES3 */
-        return false;
-    }
-}());
+/* inlined from http://npmjs.com/define-properties */
+var defineProperties = (function (has) {
+  var supportsDescriptors = Object.defineProperty && (function () {
+      try {
+          Object.defineProperty({}, 'x', {});
+          return true;
+      } catch (e) { /* this is ES3 */
+          return false;
+      }
+  }());
 
-// Define configurable, writable and non-enumerable props
-// if they don't exist.
-var defineProperty;
-if (supportsDescriptors) {
-    defineProperty = function (object, name, method, forceAssign) {
-        if (!forceAssign && (name in object)) { return; }
-        Object.defineProperty(object, name, {
-            configurable: true,
-            enumerable: false,
-            writable: true,
-            value: method
-        });
-    };
-} else {
-    defineProperty = function (object, name, method, forceAssign) {
-        if (!forceAssign && (name in object)) { return; }
-        object[name] = method;
-    };
-}
-var defineProperties = function (object, map, forceAssign) {
-    for (var name in map) {
-        if (ObjectPrototype.hasOwnProperty.call(map, name)) {
-          defineProperty(object, name, map[name], forceAssign);
-        }
-    }
-};
+  // Define configurable, writable and non-enumerable props
+  // if they don't exist.
+  var defineProperty;
+  if (supportsDescriptors) {
+      defineProperty = function (object, name, method, forceAssign) {
+          if (!forceAssign && (name in object)) { return; }
+          Object.defineProperty(object, name, {
+              configurable: true,
+              enumerable: false,
+              writable: true,
+              value: method
+          });
+      };
+  } else {
+      defineProperty = function (object, name, method, forceAssign) {
+          if (!forceAssign && (name in object)) { return; }
+          object[name] = method;
+      };
+  }
+  return function defineProperties(object, map, forceAssign) {
+      for (var name in map) {
+          if (has.call(map, name)) {
+            defineProperty(object, name, map[name], forceAssign);
+          }
+      }
+  };
+}(ObjectPrototype.hasOwnProperty));
 
 //
 // Util
 // ======
 //
 
-// ES5 9.4
-// http://es5.github.com/#x9.4
-// http://jsperf.com/to-integer
-
-function toInteger(n) {
-    n = +n;
-    if (n !== n) { // isNaN
-        n = 0;
-    } else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0)) {
-        n = (n > 0 || -1) * Math.floor(Math.abs(n));
-    }
-    return n;
-}
-
+/* replaceable with https://npmjs.com/package/es-abstract /helpers/isPrimitive */
 function isPrimitive(input) {
     var type = typeof input;
-    return (
-        input === null ||
-        type === "undefined" ||
-        type === "boolean" ||
-        type === "number" ||
-        type === "string"
-    );
+    return input === null ||
+        type === 'undefined' ||
+        type === 'boolean' ||
+        type === 'number' ||
+        type === 'string';
 }
 
-function toPrimitive(input) {
-    var val, valueOf, toStr;
-    if (isPrimitive(input)) {
-        return input;
-    }
-    valueOf = input.valueOf;
-    if (isFunction(valueOf)) {
-        val = valueOf.call(input);
-        if (isPrimitive(val)) {
-            return val;
+var ES = {
+    // ES5 9.4
+    // http://es5.github.com/#x9.4
+    // http://jsperf.com/to-integer
+    /* replaceable with https://npmjs.com/package/es-abstract ES5.ToInteger */
+    ToInteger: function ToInteger(num) {
+        var n = +num;
+        if (n !== n) { // isNaN
+            n = 0;
+        } else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0)) {
+            n = (n > 0 || -1) * Math.floor(Math.abs(n));
         }
-    }
-    toStr = input.toString;
-    if (isFunction(toStr)) {
-        val = toStr.call(input);
-        if (isPrimitive(val)) {
-            return val;
+        return n;
+    },
+
+    /* replaceable with https://npmjs.com/package/es-abstract ES5.ToPrimitive */
+    ToPrimitive: function ToPrimitive(input) {
+        var val, valueOf, toStr;
+        if (isPrimitive(input)) {
+            return input;
         }
-    }
-    throw new TypeError();
-}
+        valueOf = input.valueOf;
+        if (isCallable(valueOf)) {
+            val = valueOf.call(input);
+            if (isPrimitive(val)) {
+                return val;
+            }
+        }
+        toStr = input.toString;
+        if (isCallable(toStr)) {
+            val = toStr.call(input);
+            if (isPrimitive(val)) {
+                return val;
+            }
+        }
+        throw new TypeError();
+    },
 
-// ES5 9.9
-// http://es5.github.com/#x9.9
-var toObject = function (o) {
-    if (o == null) { // this matches both null and undefined
-        throw new TypeError("can't convert " + o + " to object");
-    }
-    return Object(o);
-};
+    // ES5 9.9
+    // http://es5.github.com/#x9.9
+    /* replaceable with https://npmjs.com/package/es-abstract ES5.ToObject */
+    ToObject: function (o) {
+        /*jshint eqnull: true */
+        if (o == null) { // this matches both null and undefined
+            throw new TypeError("can't convert " + o + ' to object');
+        }
+        return Object(o);
+    },
 
-var ToUint32 = function ToUint32(x) {
-    return x >>> 0;
+    /* replaceable with https://npmjs.com/package/es-abstract ES5.ToUint32 */
+    ToUint32: function ToUint32(x) {
+        return x >>> 0;
+    }
 };
 
 //
@@ -414,15 +444,15 @@ var ToUint32 = function ToUint32(x) {
 // ES-5 15.3.4.5
 // http://es5.github.com/#x15.3.4.5
 
-function Empty() {}
+var Empty = function Empty() {};
 
 defineProperties(FunctionPrototype, {
     bind: function bind(that) { // .length is 1
         // 1. Let Target be the this value.
         var target = this;
         // 2. If IsCallable(Target) is false, throw a TypeError exception.
-        if (!isFunction(target)) {
-            throw new TypeError("Function.prototype.bind called on incompatible " + target);
+        if (!isCallable(target)) {
+            throw new TypeError('Function.prototype.bind called on incompatible ' + target);
         }
         // 3. Let A be a new (possibly empty) internal list of all of the
         //   argument values provided after thisArg (arg1, arg2 etc), in order.
@@ -437,6 +467,7 @@ defineProperties(FunctionPrototype, {
         //   15.3.4.5.2.
         // 14. Set the [[HasInstance]] internal property of F as described in
         //   15.3.4.5.3.
+        var bound;
         var binder = function () {
 
             if (this instanceof bound) {
@@ -506,7 +537,7 @@ defineProperties(FunctionPrototype, {
         //   specified in 15.3.5.1.
         var boundArgs = [];
         for (var i = 0; i < boundLength; i++) {
-            boundArgs.push("$" + i);
+            boundArgs.push('$' + i);
         }
 
         // XXX Build a dynamic function with desired amount of arguments is the only
@@ -515,7 +546,7 @@ defineProperties(FunctionPrototype, {
         // for ex.) all use of eval or Function costructor throws an exception.
         // However in all of these environments Function.prototype.bind exists
         // and so this code will never be executed.
-        var bound = Function("binder", "return function (" + boundArgs.join(",") + "){return binder.apply(this,arguments)}")(binder);
+        bound = Function('binder', 'return function (' + boundArgs.join(',') + '){ return binder.apply(this, arguments); }')(binder);
 
         if (target.prototype) {
             Empty.prototype = target.prototype;
@@ -553,19 +584,6 @@ defineProperties(FunctionPrototype, {
 // us it in defining shortcuts.
 var owns = call.bind(ObjectPrototype.hasOwnProperty);
 
-// If JS engine supports accessors creating shortcuts.
-var defineGetter;
-var defineSetter;
-var lookupGetter;
-var lookupSetter;
-var supportsAccessors;
-if ((supportsAccessors = owns(ObjectPrototype, "__defineGetter__"))) {
-    defineGetter = call.bind(ObjectPrototype.__defineGetter__);
-    defineSetter = call.bind(ObjectPrototype.__defineSetter__);
-    lookupGetter = call.bind(ObjectPrototype.__lookupGetter__);
-    lookupSetter = call.bind(ObjectPrototype.__lookupSetter__);
-}
-
 //
 // Array
 // =====
@@ -587,7 +605,7 @@ defineProperties(ArrayPrototype, {
             return array_splice.apply(this, arguments);
         }
     }
-}, spliceNoopReturnsEmptyArray);
+}, !spliceNoopReturnsEmptyArray);
 
 var spliceWorksWithEmptyObject = (function () {
     var obj = {};
@@ -598,13 +616,13 @@ defineProperties(ArrayPrototype, {
     splice: function splice(start, deleteCount) {
         if (arguments.length === 0) { return []; }
         var args = arguments;
-        this.length = Math.max(toInteger(this.length), 0);
+        this.length = Math.max(ES.ToInteger(this.length), 0);
         if (arguments.length > 0 && typeof deleteCount !== 'number') {
             args = array_slice.call(arguments);
             if (args.length < 2) {
                 args.push(this.length - start);
             } else {
-                args[1] = toInteger(deleteCount);
+                args[1] = ES.ToInteger(deleteCount);
             }
         }
         return array_splice.apply(this, args);
@@ -647,8 +665,8 @@ defineProperties(Array, { isArray: isArray });
 
 // Check failure of by-index access of string characters (IE < 9)
 // and failure of `0 in boxedString` (Rhino)
-var boxedString = Object("a");
-var splitString = boxedString[0] !== "a" || !(0 in boxedString);
+var boxedString = Object('a');
+var splitString = boxedString[0] !== 'a' || !(0 in boxedString);
 
 var properlyBoxesContext = function properlyBoxed(method) {
     // Check node 0.6.21 bug where third parameter is not boxed
@@ -669,14 +687,14 @@ var properlyBoxesContext = function properlyBoxed(method) {
 
 defineProperties(ArrayPrototype, {
     forEach: function forEach(fun /*, thisp*/) {
-        var object = toObject(this),
+        var object = ES.ToObject(this),
             self = splitString && isString(this) ? this.split('') : object,
             thisp = arguments[1],
             i = -1,
             length = self.length >>> 0;
 
         // If no callback function or if callback is not a callable function
-        if (!isFunction(fun)) {
+        if (!isCallable(fun)) {
             throw new TypeError(); // TODO message
         }
 
@@ -696,15 +714,15 @@ defineProperties(ArrayPrototype, {
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
 defineProperties(ArrayPrototype, {
     map: function map(fun /*, thisp*/) {
-        var object = toObject(this),
+        var object = ES.ToObject(this),
             self = splitString && isString(this) ? this.split('') : object,
             length = self.length >>> 0,
             result = Array(length),
             thisp = arguments[1];
 
         // If no callback function or if callback is not a callable function
-        if (!isFunction(fun)) {
-            throw new TypeError(fun + " is not a function");
+        if (!isCallable(fun)) {
+            throw new TypeError(fun + ' is not a function');
         }
 
         for (var i = 0; i < length; i++) {
@@ -721,7 +739,7 @@ defineProperties(ArrayPrototype, {
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/filter
 defineProperties(ArrayPrototype, {
     filter: function filter(fun /*, thisp */) {
-        var object = toObject(this),
+        var object = ES.ToObject(this),
             self = splitString && isString(this) ? this.split('') : object,
             length = self.length >>> 0,
             result = [],
@@ -729,8 +747,8 @@ defineProperties(ArrayPrototype, {
             thisp = arguments[1];
 
         // If no callback function or if callback is not a callable function
-        if (!isFunction(fun)) {
-            throw new TypeError(fun + " is not a function");
+        if (!isCallable(fun)) {
+            throw new TypeError(fun + ' is not a function');
         }
 
         for (var i = 0; i < length; i++) {
@@ -750,14 +768,14 @@ defineProperties(ArrayPrototype, {
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every
 defineProperties(ArrayPrototype, {
     every: function every(fun /*, thisp */) {
-        var object = toObject(this),
+        var object = ES.ToObject(this),
             self = splitString && isString(this) ? this.split('') : object,
             length = self.length >>> 0,
             thisp = arguments[1];
 
         // If no callback function or if callback is not a callable function
-        if (!isFunction(fun)) {
-            throw new TypeError(fun + " is not a function");
+        if (!isCallable(fun)) {
+            throw new TypeError(fun + ' is not a function');
         }
 
         for (var i = 0; i < length; i++) {
@@ -774,14 +792,14 @@ defineProperties(ArrayPrototype, {
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
 defineProperties(ArrayPrototype, {
     some: function some(fun /*, thisp */) {
-        var object = toObject(this),
+        var object = ES.ToObject(this),
             self = splitString && isString(this) ? this.split('') : object,
             length = self.length >>> 0,
             thisp = arguments[1];
 
         // If no callback function or if callback is not a callable function
-        if (!isFunction(fun)) {
-            throw new TypeError(fun + " is not a function");
+        if (!isCallable(fun)) {
+            throw new TypeError(fun + ' is not a function');
         }
 
         for (var i = 0; i < length; i++) {
@@ -802,18 +820,18 @@ if (ArrayPrototype.reduce) {
 }
 defineProperties(ArrayPrototype, {
     reduce: function reduce(fun /*, initial*/) {
-        var object = toObject(this),
+        var object = ES.ToObject(this),
             self = splitString && isString(this) ? this.split('') : object,
             length = self.length >>> 0;
 
         // If no callback function or if callback is not a callable function
-        if (!isFunction(fun)) {
-            throw new TypeError(fun + " is not a function");
+        if (!isCallable(fun)) {
+            throw new TypeError(fun + ' is not a function');
         }
 
         // no value to return if no initial value and an empty array
         if (!length && arguments.length === 1) {
-            throw new TypeError("reduce of empty array with no initial value");
+            throw new TypeError('reduce of empty array with no initial value');
         }
 
         var i = 0;
@@ -829,7 +847,7 @@ defineProperties(ArrayPrototype, {
 
                 // if array contains no values, no initial value to return
                 if (++i >= length) {
-                    throw new TypeError("reduce of empty array with no initial value");
+                    throw new TypeError('reduce of empty array with no initial value');
                 }
             } while (true);
         }
@@ -853,18 +871,18 @@ if (ArrayPrototype.reduceRight) {
 }
 defineProperties(ArrayPrototype, {
     reduceRight: function reduceRight(fun /*, initial*/) {
-        var object = toObject(this),
+        var object = ES.ToObject(this),
             self = splitString && isString(this) ? this.split('') : object,
             length = self.length >>> 0;
 
         // If no callback function or if callback is not a callable function
-        if (!isFunction(fun)) {
-            throw new TypeError(fun + " is not a function");
+        if (!isCallable(fun)) {
+            throw new TypeError(fun + ' is not a function');
         }
 
         // no value to return if no initial value, empty array
         if (!length && arguments.length === 1) {
-            throw new TypeError("reduceRight of empty array with no initial value");
+            throw new TypeError('reduceRight of empty array with no initial value');
         }
 
         var result, i = length - 1;
@@ -879,7 +897,7 @@ defineProperties(ArrayPrototype, {
 
                 // if array contains no values, no initial value to return
                 if (--i < 0) {
-                    throw new TypeError("reduceRight of empty array with no initial value");
+                    throw new TypeError('reduceRight of empty array with no initial value');
                 }
             } while (true);
         }
@@ -903,8 +921,8 @@ defineProperties(ArrayPrototype, {
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
 var hasFirefox2IndexOfBug = Array.prototype.indexOf && [0, 1].indexOf(1, 2) !== -1;
 defineProperties(ArrayPrototype, {
-    indexOf: function indexOf(sought /*, fromIndex */ ) {
-        var self = splitString && isString(this) ? this.split('') : toObject(this),
+    indexOf: function indexOf(sought /*, fromIndex */) {
+        var self = splitString && isString(this) ? this.split('') : ES.ToObject(this),
             length = self.length >>> 0;
 
         if (!length) {
@@ -913,7 +931,7 @@ defineProperties(ArrayPrototype, {
 
         var i = 0;
         if (arguments.length > 1) {
-            i = toInteger(arguments[1]);
+            i = ES.ToInteger(arguments[1]);
         }
 
         // handle negative indices
@@ -933,7 +951,7 @@ defineProperties(ArrayPrototype, {
 var hasFirefox2LastIndexOfBug = Array.prototype.lastIndexOf && [0, 1].lastIndexOf(0, -3) !== -1;
 defineProperties(ArrayPrototype, {
     lastIndexOf: function lastIndexOf(sought /*, fromIndex */) {
-        var self = splitString && isString(this) ? this.split('') : toObject(this),
+        var self = splitString && isString(this) ? this.split('') : ES.ToObject(this),
             length = self.length >>> 0;
 
         if (!length) {
@@ -941,7 +959,7 @@ defineProperties(ArrayPrototype, {
         }
         var i = length - 1;
         if (arguments.length > 1) {
-            i = Math.min(i, toInteger(arguments[1]));
+            i = Math.min(i, ES.ToInteger(arguments[1]));
         }
         // handle negative indices
         i = i >= 0 ? i : length - Math.abs(i);
@@ -964,36 +982,39 @@ defineProperties(ArrayPrototype, {
 
 // http://whattheheadsaid.com/2010/10/a-safer-object-keys-compatibility-implementation
 var hasDontEnumBug = !({'toString': null}).propertyIsEnumerable('toString'),
-    hasProtoEnumBug = (function () {}).propertyIsEnumerable('prototype'),
+    hasProtoEnumBug = function () {}.propertyIsEnumerable('prototype'),
+    hasStringEnumBug = !owns('x', '0'),
     dontEnums = [
-        "toString",
-        "toLocaleString",
-        "valueOf",
-        "hasOwnProperty",
-        "isPrototypeOf",
-        "propertyIsEnumerable",
-        "constructor"
+        'toString',
+        'toLocaleString',
+        'valueOf',
+        'hasOwnProperty',
+        'isPrototypeOf',
+        'propertyIsEnumerable',
+        'constructor'
     ],
     dontEnumsLength = dontEnums.length;
 
 defineProperties(Object, {
     keys: function keys(object) {
-        var isFn = isFunction(object),
+        var isFn = isCallable(object),
             isArgs = isArguments(object),
             isObject = object !== null && typeof object === 'object',
             isStr = isObject && isString(object);
 
         if (!isObject && !isFn && !isArgs) {
-            throw new TypeError("Object.keys called on a non-object");
+            throw new TypeError('Object.keys called on a non-object');
         }
 
         var theKeys = [];
         var skipProto = hasProtoEnumBug && isFn;
-        if (isStr || isArgs) {
+        if ((isStr && hasStringEnumBug) || isArgs) {
             for (var i = 0; i < object.length; ++i) {
                 theKeys.push(String(i));
             }
-        } else {
+        }
+
+        if (!isArgs) {
             for (var name in object) {
                 if (!(skipProto && name === 'prototype') && owns(object, name)) {
                     theKeys.push(String(name));
@@ -1043,14 +1064,14 @@ defineProperties(Object, {
 // The time zone is always UTC, denoted by the suffix Z. If the time value of
 // this object is not a finite Number a RangeError exception is thrown.
 var negativeDate = -62198755200000;
-var negativeYearString = "-000001";
+var negativeYearString = '-000001';
 var hasNegativeDateBug = Date.prototype.toISOString && new Date(negativeDate).toISOString().indexOf(negativeYearString) === -1;
 
 defineProperties(Date.prototype, {
     toISOString: function toISOString() {
         var result, length, value, year, month;
         if (!isFinite(this)) {
-            throw new RangeError("Date.prototype.toISOString called on non-finite value.");
+            throw new RangeError('Date.prototype.toISOString called on non-finite value.');
         }
 
         year = this.getUTCFullYear();
@@ -1063,8 +1084,8 @@ defineProperties(Date.prototype, {
         // the date time string format is specified in 15.9.1.15.
         result = [month + 1, this.getUTCDate(), this.getUTCHours(), this.getUTCMinutes(), this.getUTCSeconds()];
         year = (
-            (year < 0 ? "-" : (year > 9999 ? "+" : "")) +
-            ("00000" + Math.abs(year)).slice(0 <= year && year <= 9999 ? -4 : -6)
+            (year < 0 ? '-' : (year > 9999 ? '+' : '')) +
+            ('00000' + Math.abs(year)).slice((0 <= year && year <= 9999) ? -4 : -6)
         );
 
         length = result.length;
@@ -1073,14 +1094,14 @@ defineProperties(Date.prototype, {
             // pad months, days, hours, minutes, and seconds to have two
             // digits.
             if (value < 10) {
-                result[length] = "0" + value;
+                result[length] = '0' + value;
             }
         }
         // pad milliseconds to have three digits.
         return (
-            year + "-" + result.slice(0, 2).join("-") +
-            "T" + result.slice(2).join(":") + "." +
-            ("000" + this.getUTCMilliseconds()).slice(-3) + "Z"
+            year + '-' + result.slice(0, 2).join('-') +
+            'T' + result.slice(2).join(':') + '.' +
+            ('000' + this.getUTCMilliseconds()).slice(-3) + 'Z'
         );
     }
 }, hasNegativeDateBug);
@@ -1111,20 +1132,20 @@ if (!dateToJSONIsSupported) {
 
         // 1.  Let O be the result of calling ToObject, giving it the this
         // value as its argument.
-        // 2. Let tv be toPrimitive(O, hint Number).
+        // 2. Let tv be ES.ToPrimitive(O, hint Number).
         var o = Object(this),
-            tv = toPrimitive(o),
+            tv = ES.ToPrimitive(o),
             toISO;
         // 3. If tv is a Number and is not finite, return null.
-        if (typeof tv === "number" && !isFinite(tv)) {
+        if (typeof tv === 'number' && !isFinite(tv)) {
             return null;
         }
         // 4. Let toISO be the result of calling the [[Get]] internal method of
         // O with argument "toISOString".
         toISO = o.toISOString;
         // 5. If IsCallable(toISO) is false, throw a TypeError exception.
-        if (typeof toISO !== "function") {
-            throw new TypeError("toISOString property is not callable");
+        if (typeof toISO !== 'function') {
+            throw new TypeError('toISOString property is not callable');
         }
         // 6. Return the result of calling the [[Call]] internal method of
         //  toISO with O as the this value and an empty argument list.
@@ -1147,12 +1168,14 @@ if (!dateToJSONIsSupported) {
 // http://gist.github.com/303249
 var supportsExtendedYears = Date.parse('+033658-09-27T01:46:40.000Z') === 1e15;
 var acceptsInvalidDates = !isNaN(Date.parse('2012-04-04T24:00:00.500Z')) || !isNaN(Date.parse('2012-11-31T23:59:59.000Z'));
-var doesNotParseY2KNewYear = isNaN(Date.parse("2000-01-01T00:00:00.000Z"));
+var doesNotParseY2KNewYear = isNaN(Date.parse('2000-01-01T00:00:00.000Z'));
 if (!Date.parse || doesNotParseY2KNewYear || acceptsInvalidDates || !supportsExtendedYears) {
     // XXX global assignment won't work in embeddings that use
     // an alternate object for the context.
+    /*global Date: true */
+    /*eslint-disable no-undef*/
     Date = (function (NativeDate) {
-
+    /*eslint-enable no-undef*/
         // Date.length === 7
         function Date(Y, M, D, h, m, s, ms) {
             var length = arguments.length;
@@ -1178,27 +1201,27 @@ if (!Date.parse || doesNotParseY2KNewYear || acceptsInvalidDates || !supportsExt
         }
 
         // 15.9.1.15 Date Time String Format.
-        var isoDateExpression = new RegExp("^" +
-            "(\\d{4}|[\+\-]\\d{6})" + // four-digit year capture or sign +
+        var isoDateExpression = new RegExp('^' +
+            '(\\d{4}|[+-]\\d{6})' + // four-digit year capture or sign +
                                       // 6-digit extended year
-            "(?:-(\\d{2})" + // optional month capture
-            "(?:-(\\d{2})" + // optional day capture
-            "(?:" + // capture hours:minutes:seconds.milliseconds
-                "T(\\d{2})" + // hours capture
-                ":(\\d{2})" + // minutes capture
-                "(?:" + // optional :seconds.milliseconds
-                    ":(\\d{2})" + // seconds capture
-                    "(?:(\\.\\d{1,}))?" + // milliseconds capture
-                ")?" +
-            "(" + // capture UTC offset component
-                "Z|" + // UTC capture
-                "(?:" + // offset specifier +/-hours:minutes
-                    "([-+])" + // sign capture
-                    "(\\d{2})" + // hours offset capture
-                    ":(\\d{2})" + // minutes offset capture
-                ")" +
-            ")?)?)?)?" +
-        "$");
+            '(?:-(\\d{2})' + // optional month capture
+            '(?:-(\\d{2})' + // optional day capture
+            '(?:' + // capture hours:minutes:seconds.milliseconds
+                'T(\\d{2})' + // hours capture
+                ':(\\d{2})' + // minutes capture
+                '(?:' + // optional :seconds.milliseconds
+                    ':(\\d{2})' + // seconds capture
+                    '(?:(\\.\\d{1,}))?' + // milliseconds capture
+                ')?' +
+            '(' + // capture UTC offset component
+                'Z|' + // UTC capture
+                '(?:' + // offset specifier +/-hours:minutes
+                    '([-+])' + // sign capture
+                    '(\\d{2})' + // hours offset capture
+                    ':(\\d{2})' + // minutes offset capture
+                ')' +
+            ')?)?)?)?' +
+        '$');
 
         var months = [
             0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
@@ -1248,7 +1271,7 @@ if (!Date.parse || doesNotParseY2KNewYear || acceptsInvalidDates || !supportsExt
                     // (ES 5.1 bug)
                     // see https://bugs.ecmascript.org/show_bug.cgi?id=112
                     isLocalTime = Boolean(match[4] && !match[8]),
-                    signOffset = match[9] === "-" ? 1 : -1,
+                    signOffset = match[9] === '-' ? 1 : -1,
                     hourOffset = Number(match[10] || 0),
                     minuteOffset = Number(match[11] || 0),
                     result;
@@ -1288,7 +1311,8 @@ if (!Date.parse || doesNotParseY2KNewYear || acceptsInvalidDates || !supportsExt
         };
 
         return Date;
-    })(Date);
+    }(Date));
+    /*global Date: false */
 }
 
 // ES5 15.9.4.4
@@ -1308,10 +1332,10 @@ if (!Date.now) {
 // ES5.1 15.7.4.5
 // http://es5.github.com/#x15.7.4.5
 var hasToFixedBugs = NumberPrototype.toFixed && (
-  (0.00008).toFixed(3) !== '0.000'
-  || (0.9).toFixed(0) !== '1'
-  || (1.255).toFixed(2) !== '1.25'
-  || (1000000000000000128).toFixed(0) !== "1000000000000000128"
+  (0.00008).toFixed(3) !== '0.000' ||
+  (0.9).toFixed(0) !== '1' ||
+  (1.255).toFixed(2) !== '1.25' ||
+  (1000000000000000128).toFixed(0) !== '1000000000000000128'
 );
 
 var toFixedHelpers = {
@@ -1375,14 +1399,14 @@ defineProperties(NumberPrototype, {
         f = f !== f ? 0 : Math.floor(f);
 
         if (f < 0 || f > 20) {
-            throw new RangeError("Number.toFixed called with invalid number of decimals");
+            throw new RangeError('Number.toFixed called with invalid number of decimals');
         }
 
         x = Number(this);
 
         // Test for NaN
         if (x !== x) {
-            return "NaN";
+            return 'NaN';
         }
 
         // If it is too big or small, return the string value of the number
@@ -1390,14 +1414,14 @@ defineProperties(NumberPrototype, {
             return String(x);
         }
 
-        s = "";
+        s = '';
 
         if (x < 0) {
-            s = "-";
+            s = '-';
             x = -x;
         }
 
-        m = "0";
+        m = '0';
 
         if (x > 1e-21) {
             // 1e-21 < x < 1e21
@@ -1478,38 +1502,38 @@ var string_split = StringPrototype.split;
 if (
     'ab'.split(/(?:ab)*/).length !== 2 ||
     '.'.split(/(.?)(.?)/).length !== 4 ||
-    'tesst'.split(/(s)*/)[1] === "t" ||
+    'tesst'.split(/(s)*/)[1] === 't' ||
     'test'.split(/(?:)/, -1).length !== 4 ||
     ''.split(/.?/).length ||
     '.'.split(/()()/).length > 1
 ) {
     (function () {
-        var compliantExecNpcg = /()??/.exec("")[1] === void 0; // NPCG: nonparticipating capturing group
+        var compliantExecNpcg = typeof (/()??/).exec('')[1] === 'undefined'; // NPCG: nonparticipating capturing group
 
         StringPrototype.split = function (separator, limit) {
             var string = this;
-            if (separator === void 0 && limit === 0) {
+            if (typeof separator === 'undefined' && limit === 0) {
                 return [];
             }
 
             // If `separator` is not a regex, use native split
-            if (_toString.call(separator) !== "[object RegExp]") {
+            if (!isRegex(separator)) {
                 return string_split.call(this, separator, limit);
             }
 
             var output = [],
-                flags = (separator.ignoreCase ? "i" : "") +
-                        (separator.multiline  ? "m" : "") +
-                        (separator.extended   ? "x" : "") + // Proposed for ES6
-                        (separator.sticky     ? "y" : ""), // Firefox 3+
+                flags = (separator.ignoreCase ? 'i' : '') +
+                        (separator.multiline ? 'm' : '') +
+                        (separator.extended ? 'x' : '') + // Proposed for ES6
+                        (separator.sticky ? 'y' : ''), // Firefox 3+
                 lastLastIndex = 0,
                 // Make `global` and avoid `lastIndex` issues by working with a copy
                 separator2, match, lastIndex, lastLength;
-            separator = new RegExp(separator.source, flags + "g");
-            string += ""; // Type-convert
+            separator = new RegExp(separator.source, flags + 'g');
+            string += ''; // Type-convert
             if (!compliantExecNpcg) {
                 // Doesn't need flags gy, but they don't hurt
-                separator2 = new RegExp("^" + separator.source + "$(?!\\s)", flags);
+                separator2 = new RegExp('^' + separator.source + '$(?!\\s)', flags);
             }
             /* Values for `limit`, per the spec:
              * If undefined: 4294967295 // Math.pow(2, 32) - 1
@@ -1518,10 +1542,11 @@ if (
              * If negative number: 4294967296 - Math.floor(Math.abs(limit))
              * If other: Type-convert, then use the above rules
              */
-            limit = limit === void 0 ?
+            limit = typeof limit === 'undefined' ?
                 -1 >>> 0 : // Math.pow(2, 32) - 1
-                ToUint32(limit);
-            while (match = separator.exec(string)) {
+                ES.ToUint32(limit);
+            match = separator.exec(string);
+            while (match) {
                 // `separator.lastIndex` is not reliable cross-browser
                 lastIndex = match.index + match[0].length;
                 if (lastIndex > lastLastIndex) {
@@ -1529,16 +1554,18 @@ if (
                     // Fix browsers whose `exec` methods don't consistently return `undefined` for
                     // nonparticipating capturing groups
                     if (!compliantExecNpcg && match.length > 1) {
+                        /*eslint-disable no-loop-func */
                         match[0].replace(separator2, function () {
                             for (var i = 1; i < arguments.length - 2; i++) {
-                                if (arguments[i] === void 0) {
+                                if (typeof arguments[i] === 'undefined') {
                                     match[i] = void 0;
                                 }
                             }
                         });
+                        /*eslint-enable no-loop-func */
                     }
                     if (match.length > 1 && match.index < string.length) {
-                        ArrayPrototype.push.apply(output, match.slice(1));
+                        array_push.apply(output, match.slice(1));
                     }
                     lastLength = match[0].length;
                     lastLastIndex = lastIndex;
@@ -1549,10 +1576,11 @@ if (
                 if (separator.lastIndex === match.index) {
                     separator.lastIndex++; // Avoid an infinite loop
                 }
+                match = separator.exec(string);
             }
             if (lastLastIndex === string.length) {
-                if (lastLength || !separator.test("")) {
-                    output.push("");
+                if (lastLength || !separator.test('')) {
+                    output.push('');
                 }
             } else {
                 output.push(string.slice(lastLastIndex));
@@ -1567,9 +1595,9 @@ if (
 // then the output array is truncated so that it contains no more than limit
 // elements.
 // "0".split(undefined, 0) -> []
-} else if ("0".split(void 0, 0).length) {
+} else if ('0'.split(void 0, 0).length) {
     StringPrototype.split = function split(separator, limit) {
-        if (separator === void 0 && limit === 0) { return []; }
+        if (typeof separator === 'undefined' && limit === 0) { return []; }
         return string_split.call(this, separator, limit);
     };
 }
@@ -1585,7 +1613,7 @@ var replaceReportsGroupsCorrectly = (function () {
 
 if (!replaceReportsGroupsCorrectly) {
     StringPrototype.replace = function replace(searchValue, replaceValue) {
-        var isFn = isFunction(replaceValue);
+        var isFn = isCallable(replaceValue);
         var hasCapturingGroups = isRegex(searchValue) && (/\)[*?]/).test(searchValue.source);
         if (!isFn || !hasCapturingGroups) {
             return str_replace.call(this, searchValue, replaceValue);
@@ -1594,7 +1622,7 @@ if (!replaceReportsGroupsCorrectly) {
                 var length = arguments.length;
                 var originalLastIndex = searchValue.lastIndex;
                 searchValue.lastIndex = 0;
-                var args = searchValue.exec(match);
+                var args = searchValue.exec(match) || [];
                 searchValue.lastIndex = originalLastIndex;
                 args.push(arguments[length - 2], arguments[length - 1]);
                 return replaceValue.apply(this, args);
@@ -1610,7 +1638,7 @@ if (!replaceReportsGroupsCorrectly) {
 // normalized across all browsers
 // [bugfix, IE lt 9] IE < 9 substr() with negative value not working in IE
 var string_substr = StringPrototype.substr;
-var hasNegativeSubstrBug = "".substr && "0b".substr(-1) !== "b";
+var hasNegativeSubstrBug = ''.substr && '0b'.substr(-1) !== 'b';
 defineProperties(StringPrototype, {
     substr: function substr(start, length) {
         return string_substr.call(
@@ -1623,27 +1651,28 @@ defineProperties(StringPrototype, {
 
 // ES5 15.5.4.20
 // whitespace from: http://es5.github.io/#x15.5.4.20
-var ws = "\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003" +
-    "\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028" +
-    "\u2029\uFEFF";
+var ws = '\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003' +
+    '\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028' +
+    '\u2029\uFEFF';
 var zeroWidth = '\u200b';
-var wsRegexChars = "[" + ws + "]";
-var trimBeginRegexp = new RegExp("^" + wsRegexChars + wsRegexChars + "*");
-var trimEndRegexp = new RegExp(wsRegexChars + wsRegexChars + "*$");
+var wsRegexChars = '[' + ws + ']';
+var trimBeginRegexp = new RegExp('^' + wsRegexChars + wsRegexChars + '*');
+var trimEndRegexp = new RegExp(wsRegexChars + wsRegexChars + '*$');
 var hasTrimWhitespaceBug = StringPrototype.trim && (ws.trim() || !zeroWidth.trim());
 defineProperties(StringPrototype, {
     // http://blog.stevenlevithan.com/archives/faster-trim-javascript
     // http://perfectionkills.com/whitespace-deviations/
     trim: function trim() {
-        if (this === void 0 || this === null) {
-            throw new TypeError("can't convert " + this + " to object");
+        if (typeof this === 'undefined' || this === null) {
+            throw new TypeError("can't convert " + this + ' to object');
         }
-        return String(this).replace(trimBeginRegexp, "").replace(trimEndRegexp, "");
+        return String(this).replace(trimBeginRegexp, '').replace(trimEndRegexp, '');
     }
 }, hasTrimWhitespaceBug);
 
 // ES-5 15.1.2.2
 if (parseInt(ws + '08') !== 8 || parseInt(ws + '0x16') !== 22) {
+    /*global parseInt: true */
     parseInt = (function (origParseInt) {
         var hexRegex = /^0[xX]/;
         return function parseIntES5(str, radix) {
@@ -2086,8 +2115,8 @@ var CSSCore = {
 
 module.exports = CSSCore;
 
-}).call(this,require("ngpmcQ"))
-},{"./invariant":144,"ngpmcQ":3}],8:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./invariant":144,"oMfpAn":3}],8:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -2106,7 +2135,6 @@ module.exports = CSSCore;
  */
 var isUnitlessNumber = {
   columnCount: true,
-  fillOpacity: true,
   flex: true,
   flexGrow: true,
   flexShrink: true,
@@ -2118,7 +2146,11 @@ var isUnitlessNumber = {
   orphans: true,
   widows: true,
   zIndex: true,
-  zoom: true
+  zoom: true,
+
+  // SVG-related properties
+  fillOpacity: true,
+  strokeOpacity: true
 };
 
 /**
@@ -2337,8 +2369,8 @@ var CSSPropertyOperations = {
 
 module.exports = CSSPropertyOperations;
 
-}).call(this,require("ngpmcQ"))
-},{"./CSSProperty":8,"./ExecutionEnvironment":26,"./camelizeStyleName":116,"./dangerousStyleValue":123,"./hyphenateStyleName":142,"./memoizeStringOnly":153,"./warning":164,"ngpmcQ":3}],10:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./CSSProperty":8,"./ExecutionEnvironment":26,"./camelizeStyleName":116,"./dangerousStyleValue":123,"./hyphenateStyleName":142,"./memoizeStringOnly":153,"./warning":164,"oMfpAn":3}],10:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -2437,8 +2469,8 @@ PooledClass.addPoolingTo(CallbackQueue);
 
 module.exports = CallbackQueue;
 
-}).call(this,require("ngpmcQ"))
-},{"./Object.assign":32,"./PooledClass":33,"./invariant":144,"ngpmcQ":3}],11:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./Object.assign":32,"./PooledClass":33,"./invariant":144,"oMfpAn":3}],11:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -3278,8 +3310,8 @@ var DOMChildrenOperations = {
 
 module.exports = DOMChildrenOperations;
 
-}).call(this,require("ngpmcQ"))
-},{"./Danger":17,"./ReactMultiChildUpdateTypes":75,"./getTextContentAccessor":139,"./invariant":144,"ngpmcQ":3}],15:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./Danger":17,"./ReactMultiChildUpdateTypes":75,"./getTextContentAccessor":139,"./invariant":144,"oMfpAn":3}],15:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -3577,8 +3609,8 @@ var DOMProperty = {
 
 module.exports = DOMProperty;
 
-}).call(this,require("ngpmcQ"))
-},{"./invariant":144,"ngpmcQ":3}],16:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./invariant":144,"oMfpAn":3}],16:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -3774,8 +3806,8 @@ var DOMPropertyOperations = {
 
 module.exports = DOMPropertyOperations;
 
-}).call(this,require("ngpmcQ"))
-},{"./DOMProperty":15,"./escapeTextForBrowser":127,"./memoizeStringOnly":153,"./warning":164,"ngpmcQ":3}],17:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./DOMProperty":15,"./escapeTextForBrowser":127,"./memoizeStringOnly":153,"./warning":164,"oMfpAn":3}],17:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -3960,8 +3992,8 @@ var Danger = {
 
 module.exports = Danger;
 
-}).call(this,require("ngpmcQ"))
-},{"./ExecutionEnvironment":26,"./createNodesFromMarkup":121,"./emptyFunction":125,"./getMarkupWrap":136,"./invariant":144,"ngpmcQ":3}],18:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ExecutionEnvironment":26,"./createNodesFromMarkup":121,"./emptyFunction":125,"./getMarkupWrap":136,"./invariant":144,"oMfpAn":3}],18:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -4302,8 +4334,8 @@ var EventListener = {
 
 module.exports = EventListener;
 
-}).call(this,require("ngpmcQ"))
-},{"./emptyFunction":125,"ngpmcQ":3}],22:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./emptyFunction":125,"oMfpAn":3}],22:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -4578,8 +4610,8 @@ var EventPluginHub = {
 
 module.exports = EventPluginHub;
 
-}).call(this,require("ngpmcQ"))
-},{"./EventPluginRegistry":23,"./EventPluginUtils":24,"./accumulateInto":113,"./forEachAccumulated":130,"./invariant":144,"ngpmcQ":3}],23:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./EventPluginRegistry":23,"./EventPluginUtils":24,"./accumulateInto":113,"./forEachAccumulated":130,"./invariant":144,"oMfpAn":3}],23:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -4858,8 +4890,8 @@ var EventPluginRegistry = {
 
 module.exports = EventPluginRegistry;
 
-}).call(this,require("ngpmcQ"))
-},{"./invariant":144,"ngpmcQ":3}],24:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./invariant":144,"oMfpAn":3}],24:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -5079,8 +5111,8 @@ var EventPluginUtils = {
 
 module.exports = EventPluginUtils;
 
-}).call(this,require("ngpmcQ"))
-},{"./EventConstants":20,"./invariant":144,"ngpmcQ":3}],25:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./EventConstants":20,"./invariant":144,"oMfpAn":3}],25:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -5221,8 +5253,8 @@ var EventPropagators = {
 
 module.exports = EventPropagators;
 
-}).call(this,require("ngpmcQ"))
-},{"./EventConstants":20,"./EventPluginHub":22,"./accumulateInto":113,"./forEachAccumulated":130,"ngpmcQ":3}],26:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./EventConstants":20,"./EventPluginHub":22,"./accumulateInto":113,"./forEachAccumulated":130,"oMfpAn":3}],26:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -5358,7 +5390,11 @@ var HTMLDOMPropertyConfig = {
     draggable: null,
     encType: null,
     form: MUST_USE_ATTRIBUTE,
+    formAction: MUST_USE_ATTRIBUTE,
+    formEncType: MUST_USE_ATTRIBUTE,
+    formMethod: MUST_USE_ATTRIBUTE,
     formNoValidate: HAS_BOOLEAN_VALUE,
+    formTarget: MUST_USE_ATTRIBUTE,
     frameBorder: MUST_USE_ATTRIBUTE,
     height: MUST_USE_ATTRIBUTE,
     hidden: MUST_USE_ATTRIBUTE | HAS_BOOLEAN_VALUE,
@@ -5373,6 +5409,8 @@ var HTMLDOMPropertyConfig = {
     list: MUST_USE_ATTRIBUTE,
     loop: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
     manifest: MUST_USE_ATTRIBUTE,
+    marginHeight: null,
+    marginWidth: null,
     max: null,
     maxLength: MUST_USE_ATTRIBUTE,
     media: MUST_USE_ATTRIBUTE,
@@ -5649,8 +5687,8 @@ var LinkedValueUtils = {
 
 module.exports = LinkedValueUtils;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactPropTypes":82,"./invariant":144,"ngpmcQ":3}],30:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactPropTypes":82,"./invariant":144,"oMfpAn":3}],30:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -5699,8 +5737,8 @@ var LocalEventTrapMixin = {
 
 module.exports = LocalEventTrapMixin;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactBrowserEventEmitter":36,"./accumulateInto":113,"./forEachAccumulated":130,"./invariant":144,"ngpmcQ":3}],31:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactBrowserEventEmitter":36,"./accumulateInto":113,"./forEachAccumulated":130,"./invariant":144,"oMfpAn":3}],31:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -5920,8 +5958,8 @@ var PooledClass = {
 
 module.exports = PooledClass;
 
-}).call(this,require("ngpmcQ"))
-},{"./invariant":144,"ngpmcQ":3}],34:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./invariant":144,"oMfpAn":3}],34:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -6104,12 +6142,12 @@ if ("production" !== process.env.NODE_ENV) {
 
 // Version exists only in the open-source version of React, not in Facebook's
 // internal version.
-React.version = '0.12.0';
+React.version = '0.12.2';
 
 module.exports = React;
 
-}).call(this,require("ngpmcQ"))
-},{"./DOMPropertyOperations":16,"./EventPluginUtils":24,"./ExecutionEnvironment":26,"./Object.assign":32,"./ReactChildren":39,"./ReactComponent":40,"./ReactCompositeComponent":43,"./ReactContext":44,"./ReactCurrentOwner":45,"./ReactDOM":46,"./ReactDOMComponent":48,"./ReactDefaultInjection":58,"./ReactElement":61,"./ReactElementValidator":62,"./ReactInstanceHandles":69,"./ReactLegacyElement":70,"./ReactMount":73,"./ReactMultiChild":74,"./ReactPerf":78,"./ReactPropTypes":82,"./ReactServerRendering":86,"./ReactTextComponent":90,"./deprecated":124,"./onlyChild":155,"ngpmcQ":3}],35:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./DOMPropertyOperations":16,"./EventPluginUtils":24,"./ExecutionEnvironment":26,"./Object.assign":32,"./ReactChildren":39,"./ReactComponent":40,"./ReactCompositeComponent":43,"./ReactContext":44,"./ReactCurrentOwner":45,"./ReactDOM":46,"./ReactDOMComponent":48,"./ReactDefaultInjection":58,"./ReactElement":61,"./ReactElementValidator":62,"./ReactInstanceHandles":69,"./ReactLegacyElement":70,"./ReactMount":73,"./ReactMultiChild":74,"./ReactPerf":78,"./ReactPropTypes":82,"./ReactServerRendering":86,"./ReactTextComponent":90,"./deprecated":124,"./onlyChild":155,"oMfpAn":3}],35:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -6151,8 +6189,8 @@ var ReactBrowserComponentMixin = {
 
 module.exports = ReactBrowserComponentMixin;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactEmptyComponent":63,"./ReactMount":73,"./invariant":144,"ngpmcQ":3}],36:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactEmptyComponent":63,"./ReactMount":73,"./invariant":144,"oMfpAn":3}],36:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -6708,8 +6746,8 @@ var ReactCSSTransitionGroupChild = React.createClass({
 
 module.exports = ReactCSSTransitionGroupChild;
 
-}).call(this,require("ngpmcQ"))
-},{"./CSSCore":7,"./React":34,"./ReactTransitionEvents":92,"./onlyChild":155,"ngpmcQ":3}],39:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./CSSCore":7,"./React":34,"./ReactTransitionEvents":92,"./onlyChild":155,"oMfpAn":3}],39:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -6858,8 +6896,8 @@ var ReactChildren = {
 
 module.exports = ReactChildren;
 
-}).call(this,require("ngpmcQ"))
-},{"./PooledClass":33,"./traverseAllChildren":162,"./warning":164,"ngpmcQ":3}],40:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./PooledClass":33,"./traverseAllChildren":162,"./warning":164,"oMfpAn":3}],40:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -7301,8 +7339,8 @@ var ReactComponent = {
 
 module.exports = ReactComponent;
 
-}).call(this,require("ngpmcQ"))
-},{"./Object.assign":32,"./ReactElement":61,"./ReactOwner":77,"./ReactUpdates":94,"./invariant":144,"./keyMirror":150,"ngpmcQ":3}],41:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./Object.assign":32,"./ReactElement":61,"./ReactOwner":77,"./ReactUpdates":94,"./invariant":144,"./keyMirror":150,"oMfpAn":3}],41:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -7423,8 +7461,8 @@ var ReactComponentBrowserEnvironment = {
 
 module.exports = ReactComponentBrowserEnvironment;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactDOMIDOperations":50,"./ReactMarkupChecksum":72,"./ReactMount":73,"./ReactPerf":78,"./ReactReconcileTransaction":84,"./getReactRootElementInContainer":138,"./invariant":144,"./setInnerHTML":158,"ngpmcQ":3}],42:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactDOMIDOperations":50,"./ReactMarkupChecksum":72,"./ReactMount":73,"./ReactPerf":78,"./ReactReconcileTransaction":84,"./getReactRootElementInContainer":138,"./invariant":144,"./setInnerHTML":158,"oMfpAn":3}],42:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -8786,7 +8824,7 @@ var ReactCompositeComponentMixin = {
       boundMethod.__reactBoundArguments = null;
       var componentName = component.constructor.displayName;
       var _bind = boundMethod.bind;
-      boundMethod.bind = function(newThis ) {var args=Array.prototype.slice.call(arguments,1);
+      boundMethod.bind = function(newThis ) {for (var args=[],$__0=1,$__1=arguments.length;$__0<$__1;$__0++) args.push(arguments[$__0]);
         // User is trying to bind() an autobound method; we effectively will
         // ignore the value of "this" that the user is trying to use, so
         // let's warn.
@@ -8912,8 +8950,8 @@ var ReactCompositeComponent = {
 
 module.exports = ReactCompositeComponent;
 
-}).call(this,require("ngpmcQ"))
-},{"./Object.assign":32,"./ReactComponent":40,"./ReactContext":44,"./ReactCurrentOwner":45,"./ReactElement":61,"./ReactElementValidator":62,"./ReactEmptyComponent":63,"./ReactErrorUtils":64,"./ReactLegacyElement":70,"./ReactOwner":77,"./ReactPerf":78,"./ReactPropTransferer":79,"./ReactPropTypeLocationNames":80,"./ReactPropTypeLocations":81,"./ReactUpdates":94,"./instantiateReactComponent":143,"./invariant":144,"./keyMirror":150,"./keyOf":151,"./mapObject":152,"./monitorCodeUse":154,"./shouldUpdateReactComponent":160,"./warning":164,"ngpmcQ":3}],44:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./Object.assign":32,"./ReactComponent":40,"./ReactContext":44,"./ReactCurrentOwner":45,"./ReactElement":61,"./ReactElementValidator":62,"./ReactEmptyComponent":63,"./ReactErrorUtils":64,"./ReactLegacyElement":70,"./ReactOwner":77,"./ReactPerf":78,"./ReactPropTransferer":79,"./ReactPropTypeLocationNames":80,"./ReactPropTypeLocations":81,"./ReactUpdates":94,"./instantiateReactComponent":143,"./invariant":144,"./keyMirror":150,"./keyOf":151,"./mapObject":152,"./monitorCodeUse":154,"./shouldUpdateReactComponent":160,"./warning":164,"oMfpAn":3}],44:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -9191,8 +9229,8 @@ var ReactDOM = mapObject({
 
 module.exports = ReactDOM;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactElement":61,"./ReactElementValidator":62,"./ReactLegacyElement":70,"./mapObject":152,"ngpmcQ":3}],47:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactElement":61,"./ReactElementValidator":62,"./ReactLegacyElement":70,"./mapObject":152,"oMfpAn":3}],47:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -9743,8 +9781,8 @@ assign(
 
 module.exports = ReactDOMComponent;
 
-}).call(this,require("ngpmcQ"))
-},{"./CSSPropertyOperations":9,"./DOMProperty":15,"./DOMPropertyOperations":16,"./Object.assign":32,"./ReactBrowserComponentMixin":35,"./ReactBrowserEventEmitter":36,"./ReactComponent":40,"./ReactMount":73,"./ReactMultiChild":74,"./ReactPerf":78,"./escapeTextForBrowser":127,"./invariant":144,"./isEventSupported":145,"./keyOf":151,"./monitorCodeUse":154,"ngpmcQ":3}],49:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./CSSPropertyOperations":9,"./DOMProperty":15,"./DOMPropertyOperations":16,"./Object.assign":32,"./ReactBrowserComponentMixin":35,"./ReactBrowserEventEmitter":36,"./ReactComponent":40,"./ReactMount":73,"./ReactMultiChild":74,"./ReactPerf":78,"./escapeTextForBrowser":127,"./invariant":144,"./isEventSupported":145,"./keyOf":151,"./monitorCodeUse":154,"oMfpAn":3}],49:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -9979,8 +10017,8 @@ var ReactDOMIDOperations = {
 
 module.exports = ReactDOMIDOperations;
 
-}).call(this,require("ngpmcQ"))
-},{"./CSSPropertyOperations":9,"./DOMChildrenOperations":14,"./DOMPropertyOperations":16,"./ReactMount":73,"./ReactPerf":78,"./invariant":144,"./setInnerHTML":158,"ngpmcQ":3}],51:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./CSSPropertyOperations":9,"./DOMChildrenOperations":14,"./DOMPropertyOperations":16,"./ReactMount":73,"./ReactPerf":78,"./invariant":144,"./setInnerHTML":158,"oMfpAn":3}],51:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -10205,8 +10243,8 @@ var ReactDOMInput = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMInput;
 
-}).call(this,require("ngpmcQ"))
-},{"./AutoFocusMixin":5,"./DOMPropertyOperations":16,"./LinkedValueUtils":29,"./Object.assign":32,"./ReactBrowserComponentMixin":35,"./ReactCompositeComponent":43,"./ReactDOM":46,"./ReactElement":61,"./ReactMount":73,"./ReactUpdates":94,"./invariant":144,"ngpmcQ":3}],53:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./AutoFocusMixin":5,"./DOMPropertyOperations":16,"./LinkedValueUtils":29,"./Object.assign":32,"./ReactBrowserComponentMixin":35,"./ReactCompositeComponent":43,"./ReactDOM":46,"./ReactElement":61,"./ReactMount":73,"./ReactUpdates":94,"./invariant":144,"oMfpAn":3}],53:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -10258,8 +10296,8 @@ var ReactDOMOption = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMOption;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactBrowserComponentMixin":35,"./ReactCompositeComponent":43,"./ReactDOM":46,"./ReactElement":61,"./warning":164,"ngpmcQ":3}],54:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactBrowserComponentMixin":35,"./ReactCompositeComponent":43,"./ReactDOM":46,"./ReactElement":61,"./warning":164,"oMfpAn":3}],54:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -10792,8 +10830,8 @@ var ReactDOMTextarea = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMTextarea;
 
-}).call(this,require("ngpmcQ"))
-},{"./AutoFocusMixin":5,"./DOMPropertyOperations":16,"./LinkedValueUtils":29,"./Object.assign":32,"./ReactBrowserComponentMixin":35,"./ReactCompositeComponent":43,"./ReactDOM":46,"./ReactElement":61,"./ReactUpdates":94,"./invariant":144,"./warning":164,"ngpmcQ":3}],57:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./AutoFocusMixin":5,"./DOMPropertyOperations":16,"./LinkedValueUtils":29,"./Object.assign":32,"./ReactBrowserComponentMixin":35,"./ReactCompositeComponent":43,"./ReactDOM":46,"./ReactElement":61,"./ReactUpdates":94,"./invariant":144,"./warning":164,"oMfpAn":3}],57:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -10994,8 +11032,8 @@ module.exports = {
   inject: inject
 };
 
-}).call(this,require("ngpmcQ"))
-},{"./BeforeInputEventPlugin":6,"./ChangeEventPlugin":11,"./ClientReactRootIndex":12,"./CompositionEventPlugin":13,"./DefaultEventPluginOrder":18,"./EnterLeaveEventPlugin":19,"./ExecutionEnvironment":26,"./HTMLDOMPropertyConfig":27,"./MobileSafariClickEventPlugin":31,"./ReactBrowserComponentMixin":35,"./ReactComponentBrowserEnvironment":41,"./ReactDOMButton":47,"./ReactDOMComponent":48,"./ReactDOMForm":49,"./ReactDOMImg":51,"./ReactDOMInput":52,"./ReactDOMOption":53,"./ReactDOMSelect":54,"./ReactDOMTextarea":56,"./ReactDefaultBatchingStrategy":57,"./ReactDefaultPerf":59,"./ReactEventListener":66,"./ReactInjection":67,"./ReactInstanceHandles":69,"./ReactMount":73,"./SVGDOMPropertyConfig":96,"./SelectEventPlugin":97,"./ServerReactRootIndex":98,"./SimpleEventPlugin":99,"./createFullPageComponent":120,"ngpmcQ":3}],59:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./BeforeInputEventPlugin":6,"./ChangeEventPlugin":11,"./ClientReactRootIndex":12,"./CompositionEventPlugin":13,"./DefaultEventPluginOrder":18,"./EnterLeaveEventPlugin":19,"./ExecutionEnvironment":26,"./HTMLDOMPropertyConfig":27,"./MobileSafariClickEventPlugin":31,"./ReactBrowserComponentMixin":35,"./ReactComponentBrowserEnvironment":41,"./ReactDOMButton":47,"./ReactDOMComponent":48,"./ReactDOMForm":49,"./ReactDOMImg":51,"./ReactDOMInput":52,"./ReactDOMOption":53,"./ReactDOMSelect":54,"./ReactDOMTextarea":56,"./ReactDefaultBatchingStrategy":57,"./ReactDefaultPerf":59,"./ReactEventListener":66,"./ReactInjection":67,"./ReactInstanceHandles":69,"./ReactMount":73,"./SVGDOMPropertyConfig":96,"./SelectEventPlugin":97,"./ServerReactRootIndex":98,"./SimpleEventPlugin":99,"./createFullPageComponent":120,"oMfpAn":3}],59:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -11135,7 +11173,7 @@ var ReactDefaultPerf = {
   },
 
   measure: function(moduleName, fnName, func) {
-    return function() {var args=Array.prototype.slice.call(arguments,0);
+    return function() {for (var args=[],$__0=0,$__1=arguments.length;$__0<$__1;$__0++) args.push(arguments[$__0]);
       var totalTime;
       var rv;
       var start;
@@ -11639,7 +11677,7 @@ ReactElement.createElement = function(type, config, children) {
   }
 
   // Resolve default props
-  if (type.defaultProps) {
+  if (type && type.defaultProps) {
     var defaultProps = type.defaultProps;
     for (propName in defaultProps) {
       if (typeof props[propName] === 'undefined') {
@@ -11706,8 +11744,9 @@ ReactElement.isValidElement = function(object) {
 
 module.exports = ReactElement;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactContext":44,"./ReactCurrentOwner":45,"./warning":164,"ngpmcQ":3}],62:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactContext":44,"./ReactCurrentOwner":45,"./warning":164,"oMfpAn":3}],62:[function(require,module,exports){
+(function (process){
 /**
  * Copyright 2014, Facebook, Inc.
  * All rights reserved.
@@ -11733,6 +11772,7 @@ var ReactPropTypeLocations = require("./ReactPropTypeLocations");
 var ReactCurrentOwner = require("./ReactCurrentOwner");
 
 var monitorCodeUse = require("./monitorCodeUse");
+var warning = require("./warning");
 
 /**
  * Warn if there's no key explicitly set on dynamic arrays of children or
@@ -11930,6 +11970,15 @@ function checkPropTypes(componentName, propTypes, props, location) {
 var ReactElementValidator = {
 
   createElement: function(type, props, children) {
+    // We warn in this case but don't throw. We expect the element creation to
+    // succeed and there will likely be errors in render.
+    ("production" !== process.env.NODE_ENV ? warning(
+      type != null,
+      'React.createElement: type should not be null or undefined. It should ' +
+        'be a string (for DOM elements) or a ReactClass (for composite ' +
+        'components).'
+    ) : null);
+
     var element = ReactElement.createElement.apply(this, arguments);
 
     // The result can be nullish if a mock or a custom function is used.
@@ -11942,22 +11991,24 @@ var ReactElementValidator = {
       validateChildKeys(arguments[i], type);
     }
 
-    var name = type.displayName;
-    if (type.propTypes) {
-      checkPropTypes(
-        name,
-        type.propTypes,
-        element.props,
-        ReactPropTypeLocations.prop
-      );
-    }
-    if (type.contextTypes) {
-      checkPropTypes(
-        name,
-        type.contextTypes,
-        element._context,
-        ReactPropTypeLocations.context
-      );
+    if (type) {
+      var name = type.displayName;
+      if (type.propTypes) {
+        checkPropTypes(
+          name,
+          type.propTypes,
+          element.props,
+          ReactPropTypeLocations.prop
+        );
+      }
+      if (type.contextTypes) {
+        checkPropTypes(
+          name,
+          type.contextTypes,
+          element._context,
+          ReactPropTypeLocations.context
+        );
+      }
     }
     return element;
   },
@@ -11975,7 +12026,8 @@ var ReactElementValidator = {
 
 module.exports = ReactElementValidator;
 
-},{"./ReactCurrentOwner":45,"./ReactElement":61,"./ReactPropTypeLocations":81,"./monitorCodeUse":154}],63:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactCurrentOwner":45,"./ReactElement":61,"./ReactPropTypeLocations":81,"./monitorCodeUse":154,"./warning":164,"oMfpAn":3}],63:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -12051,8 +12103,8 @@ var ReactEmptyComponent = {
 
 module.exports = ReactEmptyComponent;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactElement":61,"./invariant":144,"ngpmcQ":3}],64:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactElement":61,"./invariant":144,"oMfpAn":3}],64:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -12828,8 +12880,8 @@ var ReactInstanceHandles = {
 
 module.exports = ReactInstanceHandles;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactRootIndex":85,"./invariant":144,"ngpmcQ":3}],70:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactRootIndex":85,"./invariant":144,"oMfpAn":3}],70:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -13075,8 +13127,8 @@ ReactLegacyElementFactory._isLegacyCallWarningEnabled = true;
 
 module.exports = ReactLegacyElementFactory;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactCurrentOwner":45,"./invariant":144,"./monitorCodeUse":154,"./warning":164,"ngpmcQ":3}],71:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactCurrentOwner":45,"./invariant":144,"./monitorCodeUse":154,"./warning":164,"oMfpAn":3}],71:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -13894,8 +13946,8 @@ ReactMount.renderComponent = deprecated(
 
 module.exports = ReactMount;
 
-}).call(this,require("ngpmcQ"))
-},{"./DOMProperty":15,"./ReactBrowserEventEmitter":36,"./ReactCurrentOwner":45,"./ReactElement":61,"./ReactInstanceHandles":69,"./ReactLegacyElement":70,"./ReactPerf":78,"./containsNode":118,"./deprecated":124,"./getReactRootElementInContainer":138,"./instantiateReactComponent":143,"./invariant":144,"./shouldUpdateReactComponent":160,"./warning":164,"ngpmcQ":3}],74:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./DOMProperty":15,"./ReactBrowserEventEmitter":36,"./ReactCurrentOwner":45,"./ReactElement":61,"./ReactInstanceHandles":69,"./ReactLegacyElement":70,"./ReactPerf":78,"./containsNode":118,"./deprecated":124,"./getReactRootElementInContainer":138,"./instantiateReactComponent":143,"./invariant":144,"./shouldUpdateReactComponent":160,"./warning":164,"oMfpAn":3}],74:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -14423,13 +14475,13 @@ function createInstanceForTag(tag, props, parentType) {
 
 var ReactNativeComponent = {
   createInstanceForTag: createInstanceForTag,
-  injection: ReactNativeComponentInjection,
+  injection: ReactNativeComponentInjection
 };
 
 module.exports = ReactNativeComponent;
 
-}).call(this,require("ngpmcQ"))
-},{"./Object.assign":32,"./invariant":144,"ngpmcQ":3}],77:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./Object.assign":32,"./invariant":144,"oMfpAn":3}],77:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -14584,8 +14636,8 @@ var ReactOwner = {
 
 module.exports = ReactOwner;
 
-}).call(this,require("ngpmcQ"))
-},{"./emptyObject":126,"./invariant":144,"ngpmcQ":3}],78:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./emptyObject":126,"./invariant":144,"oMfpAn":3}],78:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -14668,8 +14720,8 @@ function _noMeasure(objName, fnName, func) {
 
 module.exports = ReactPerf;
 
-}).call(this,require("ngpmcQ"))
-},{"ngpmcQ":3}],79:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"oMfpAn":3}],79:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -14835,8 +14887,8 @@ var ReactPropTransferer = {
 
 module.exports = ReactPropTransferer;
 
-}).call(this,require("ngpmcQ"))
-},{"./Object.assign":32,"./emptyFunction":125,"./invariant":144,"./joinClasses":149,"./warning":164,"ngpmcQ":3}],80:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./Object.assign":32,"./emptyFunction":125,"./invariant":144,"./joinClasses":149,"./warning":164,"oMfpAn":3}],80:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -14863,8 +14915,8 @@ if ("production" !== process.env.NODE_ENV) {
 
 module.exports = ReactPropTypeLocationNames;
 
-}).call(this,require("ngpmcQ"))
-},{"ngpmcQ":3}],81:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"oMfpAn":3}],81:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -15584,8 +15636,8 @@ module.exports = {
   renderToStaticMarkup: renderToStaticMarkup
 };
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactElement":61,"./ReactInstanceHandles":69,"./ReactMarkupChecksum":72,"./ReactServerRenderingTransaction":87,"./instantiateReactComponent":143,"./invariant":144,"ngpmcQ":3}],87:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactElement":61,"./ReactInstanceHandles":69,"./ReactMarkupChecksum":72,"./ReactServerRenderingTransaction":87,"./instantiateReactComponent":143,"./invariant":144,"oMfpAn":3}],87:[function(require,module,exports){
 /**
  * Copyright 2014, Facebook, Inc.
  * All rights reserved.
@@ -16038,7 +16090,7 @@ var ReactTestUtils = {
   mockComponent: function(module, mockTagName) {
     mockTagName = mockTagName || module.mockTagName || "div";
 
-    var ConvenienceConstructor = React.createClass({displayName: 'ConvenienceConstructor',
+    var ConvenienceConstructor = React.createClass({displayName: "ConvenienceConstructor",
       render: function() {
         return React.createElement(
           mockTagName,
@@ -17012,8 +17064,8 @@ var ReactUpdates = {
 
 module.exports = ReactUpdates;
 
-}).call(this,require("ngpmcQ"))
-},{"./CallbackQueue":10,"./Object.assign":32,"./PooledClass":33,"./ReactCurrentOwner":45,"./ReactPerf":78,"./Transaction":111,"./invariant":144,"./warning":164,"ngpmcQ":3}],95:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./CallbackQueue":10,"./Object.assign":32,"./PooledClass":33,"./ReactCurrentOwner":45,"./ReactPerf":78,"./Transaction":111,"./invariant":144,"./warning":164,"oMfpAn":3}],95:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -17066,8 +17118,8 @@ if ("production" !== process.env.NODE_ENV) {
 
 module.exports = React;
 
-}).call(this,require("ngpmcQ"))
-},{"./LinkedStateMixin":28,"./React":34,"./ReactCSSTransitionGroup":37,"./ReactComponentWithPureRenderMixin":42,"./ReactDefaultPerf":59,"./ReactTestUtils":89,"./ReactTransitionGroup":93,"./ReactUpdates":94,"./cloneWithProps":117,"./cx":122,"./update":163,"ngpmcQ":3}],96:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./LinkedStateMixin":28,"./React":34,"./ReactCSSTransitionGroup":37,"./ReactComponentWithPureRenderMixin":42,"./ReactDefaultPerf":59,"./ReactTestUtils":89,"./ReactTransitionGroup":93,"./ReactUpdates":94,"./cloneWithProps":117,"./cx":122,"./update":163,"oMfpAn":3}],96:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -17812,8 +17864,8 @@ var SimpleEventPlugin = {
 
 module.exports = SimpleEventPlugin;
 
-}).call(this,require("ngpmcQ"))
-},{"./EventConstants":20,"./EventPluginUtils":24,"./EventPropagators":25,"./SyntheticClipboardEvent":100,"./SyntheticDragEvent":102,"./SyntheticEvent":103,"./SyntheticFocusEvent":104,"./SyntheticKeyboardEvent":106,"./SyntheticMouseEvent":107,"./SyntheticTouchEvent":108,"./SyntheticUIEvent":109,"./SyntheticWheelEvent":110,"./getEventCharCode":132,"./invariant":144,"./keyOf":151,"./warning":164,"ngpmcQ":3}],100:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./EventConstants":20,"./EventPluginUtils":24,"./EventPropagators":25,"./SyntheticClipboardEvent":100,"./SyntheticDragEvent":102,"./SyntheticEvent":103,"./SyntheticFocusEvent":104,"./SyntheticKeyboardEvent":106,"./SyntheticMouseEvent":107,"./SyntheticTouchEvent":108,"./SyntheticUIEvent":109,"./SyntheticWheelEvent":110,"./getEventCharCode":132,"./invariant":144,"./keyOf":151,"./warning":164,"oMfpAn":3}],100:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -18769,8 +18821,8 @@ var Transaction = {
 
 module.exports = Transaction;
 
-}).call(this,require("ngpmcQ"))
-},{"./invariant":144,"ngpmcQ":3}],112:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./invariant":144,"oMfpAn":3}],112:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -18867,8 +18919,8 @@ function accumulateInto(current, next) {
 
 module.exports = accumulateInto;
 
-}).call(this,require("ngpmcQ"))
-},{"./invariant":144,"ngpmcQ":3}],114:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./invariant":144,"oMfpAn":3}],114:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -19034,8 +19086,8 @@ function cloneWithProps(child, props) {
 
 module.exports = cloneWithProps;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactElement":61,"./ReactPropTransferer":79,"./keyOf":151,"./warning":164,"ngpmcQ":3}],118:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactElement":61,"./ReactPropTransferer":79,"./keyOf":151,"./warning":164,"oMfpAn":3}],118:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -19225,8 +19277,8 @@ function createFullPageComponent(tag) {
 
 module.exports = createFullPageComponent;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactCompositeComponent":43,"./ReactElement":61,"./invariant":144,"ngpmcQ":3}],121:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactCompositeComponent":43,"./ReactElement":61,"./invariant":144,"oMfpAn":3}],121:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -19315,8 +19367,8 @@ function createNodesFromMarkup(markup, handleScript) {
 
 module.exports = createNodesFromMarkup;
 
-}).call(this,require("ngpmcQ"))
-},{"./ExecutionEnvironment":26,"./createArrayFrom":119,"./getMarkupWrap":136,"./invariant":144,"ngpmcQ":3}],122:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ExecutionEnvironment":26,"./createArrayFrom":119,"./getMarkupWrap":136,"./invariant":144,"oMfpAn":3}],122:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -19463,8 +19515,8 @@ function deprecated(namespace, oldName, newName, ctx, fn) {
 
 module.exports = deprecated;
 
-}).call(this,require("ngpmcQ"))
-},{"./Object.assign":32,"./warning":164,"ngpmcQ":3}],125:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./Object.assign":32,"./warning":164,"oMfpAn":3}],125:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -19521,8 +19573,8 @@ if ("production" !== process.env.NODE_ENV) {
 
 module.exports = emptyObject;
 
-}).call(this,require("ngpmcQ"))
-},{"ngpmcQ":3}],127:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"oMfpAn":3}],127:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -19631,8 +19683,8 @@ function flattenChildren(children) {
 
 module.exports = flattenChildren;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactTextComponent":90,"./traverseAllChildren":162,"./warning":164,"ngpmcQ":3}],129:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactTextComponent":90,"./traverseAllChildren":162,"./warning":164,"oMfpAn":3}],129:[function(require,module,exports){
 /**
  * Copyright 2014, Facebook, Inc.
  * All rights reserved.
@@ -20072,8 +20124,8 @@ function getMarkupWrap(nodeName) {
 
 module.exports = getMarkupWrap;
 
-}).call(this,require("ngpmcQ"))
-},{"./ExecutionEnvironment":26,"./invariant":144,"ngpmcQ":3}],137:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ExecutionEnvironment":26,"./invariant":144,"oMfpAn":3}],137:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -20447,8 +20499,8 @@ function instantiateReactComponent(element, parentCompositeType) {
 
 module.exports = instantiateReactComponent;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactElement":61,"./ReactEmptyComponent":63,"./ReactLegacyElement":70,"./ReactNativeComponent":76,"./warning":164,"ngpmcQ":3}],144:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactElement":61,"./ReactEmptyComponent":63,"./ReactLegacyElement":70,"./ReactNativeComponent":76,"./warning":164,"oMfpAn":3}],144:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -20504,8 +20556,8 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 
-}).call(this,require("ngpmcQ"))
-},{"ngpmcQ":3}],145:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"oMfpAn":3}],145:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -20762,8 +20814,8 @@ var keyMirror = function(obj) {
 
 module.exports = keyMirror;
 
-}).call(this,require("ngpmcQ"))
-},{"./invariant":144,"ngpmcQ":3}],151:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./invariant":144,"oMfpAn":3}],151:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -20919,8 +20971,8 @@ function monitorCodeUse(eventName, data) {
 
 module.exports = monitorCodeUse;
 
-}).call(this,require("ngpmcQ"))
-},{"./invariant":144,"ngpmcQ":3}],155:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./invariant":144,"oMfpAn":3}],155:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -20959,8 +21011,8 @@ function onlyChild(children) {
 
 module.exports = onlyChild;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactElement":61,"./invariant":144,"ngpmcQ":3}],156:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactElement":61,"./invariant":144,"oMfpAn":3}],156:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -21247,8 +21299,8 @@ function toArray(obj) {
 
 module.exports = toArray;
 
-}).call(this,require("ngpmcQ"))
-},{"./invariant":144,"ngpmcQ":3}],162:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./invariant":144,"oMfpAn":3}],162:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -21430,8 +21482,8 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 module.exports = traverseAllChildren;
 
-}).call(this,require("ngpmcQ"))
-},{"./ReactElement":61,"./ReactInstanceHandles":69,"./invariant":144,"ngpmcQ":3}],163:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./ReactElement":61,"./ReactInstanceHandles":69,"./invariant":144,"oMfpAn":3}],163:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -21598,8 +21650,8 @@ function update(value, spec) {
 
 module.exports = update;
 
-}).call(this,require("ngpmcQ"))
-},{"./Object.assign":32,"./invariant":144,"./keyOf":151,"ngpmcQ":3}],164:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./Object.assign":32,"./invariant":144,"./keyOf":151,"oMfpAn":3}],164:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -21626,7 +21678,7 @@ var emptyFunction = require("./emptyFunction");
 var warning = emptyFunction;
 
 if ("production" !== process.env.NODE_ENV) {
-  warning = function(condition, format ) {var args=Array.prototype.slice.call(arguments,2);
+  warning = function(condition, format ) {for (var args=[],$__0=2,$__1=arguments.length;$__0<$__1;$__0++) args.push(arguments[$__0]);
     if (format === undefined) {
       throw new Error(
         '`warning(condition, format, ...args)` requires a warning ' +
@@ -21643,8 +21695,8 @@ if ("production" !== process.env.NODE_ENV) {
 
 module.exports = warning;
 
-}).call(this,require("ngpmcQ"))
-},{"./emptyFunction":125,"ngpmcQ":3}],165:[function(require,module,exports){
+}).call(this,require("oMfpAn"))
+},{"./emptyFunction":125,"oMfpAn":3}],165:[function(require,module,exports){
 module.exports = require('./lib/React');
 
 },{"./lib/React":34}],166:[function(require,module,exports){
@@ -21773,6 +21825,28 @@ describe( "react-pager component", function () {
         );
     }
     
+    
+    it( "should return `total-1` after click on `lastPage` button", function () {
+        var pager         = generatePager( 3, 20, 5, handler )
+          , btnLastPage   = byClass( pager, 'btn-last-page' )
+          , numberedPages = byClassAll( pager, 'btn-numbered-page' );
+        expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
+        
+        TestUtils.Simulate.click( byTag( btnLastPage, 'a') );
+        function handler ( next ) { expect( next ).toEqual( 19 ); }
+    });
+
+
+    function generatePager ( c, t, v, f ) {
+        return TestUtils.renderIntoDocument(
+            React.createElement(Pager, {current: c, 
+                   total: t, 
+                   visiblePages: v, 
+                   onPageChanged: f})
+        );
+    }
+
+
     function nth ( comps, css ) {
         var res = -1
           , className;
@@ -21783,7 +21857,7 @@ describe( "react-pager component", function () {
                 if ( className.indexOf( css ) === -1 )
                     res += 1;
                 else 
-                    return ++res;
+                    return res + 1;
         }
         
         return res;

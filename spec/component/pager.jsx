@@ -123,6 +123,28 @@ describe( "react-pager component", function () {
         );
     }
     
+    
+    it( "should return `total-1` after click on `lastPage` button", function () {
+        var pager         = generatePager( 3, 20, 5, handler )
+          , btnLastPage   = byClass( pager, 'btn-last-page' )
+          , numberedPages = byClassAll( pager, 'btn-numbered-page' );
+        expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
+        
+        TestUtils.Simulate.click( byTag( btnLastPage, 'a') );
+        function handler ( next ) { expect( next ).toEqual( 19 ); }
+    });
+
+
+    function generatePager ( c, t, v, f ) {
+        return TestUtils.renderIntoDocument(
+            <Pager current={c}
+                   total={t}
+                   visiblePages={v}
+                   onPageChanged={f} />
+        );
+    }
+
+
     function nth ( comps, css ) {
         var res = -1
           , className;
@@ -133,7 +155,7 @@ describe( "react-pager component", function () {
                 if ( className.indexOf( css ) === -1 )
                     res += 1;
                 else 
-                    return ++res;
+                    return res + 1;
         }
         
         return res;
