@@ -45,3 +45,43 @@ gulp.task( 'test', [ 'build-tests' ], function ( done ) {
         configFile: __dirname + '/karma.conf.js'
     }, done );
 });
+
+
+
+
+// Build demo components
+gulp.task( 'demo-components', function () {
+    return gulp.src( 'demo/client/js/components/*.jsx' )
+               .pipe( react() )
+               .pipe( gulp.dest( 'demo/client/js/components/compiled/' ) );
+});
+
+
+// Build demo
+gulp.task( 'prep-demo', ['build', 'demo-components'], function () {
+    return gulp.src( 'demo/client/js/main.js' )
+               .pipe( react() )
+               .pipe( browserify() )
+               .pipe( concat( 'bundle.js' ) )
+               .pipe( gulp.dest( 'demo/client/js/' ) );
+});
+
+
+// Run demo
+gulp.task( 'demo', [ 'prep-demo' ], function ( done ) {
+    var express   = require( 'express' )
+      , args      = require( 'yargs' ).argv;
+
+    var PORT = args.p || args.port || 8001
+      , app = express();
+
+    app.use( express.static( './demo/client/' ) );
+
+    app.listen( PORT, function () {
+        console.log( 'Server started at port ', PORT );
+        done();
+    });
+});
+
+
+gulp.task( 'default', [ 'test' ] );

@@ -64,8 +64,16 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 
 
 ## Demo
-* [JSFiddle](http://jsfiddle.net/azaviruha/kb3gN/8573/)
-* [Local](https://github.com/AZaviruha/demo-master-detail)
+```shell
+gulp demo -p 8003 
+```
+or
+```shell
+./node_modules/.bin/gulp demo -p 8003
+```
+
+[JSFiddle](http://jsfiddle.net/azaviruha/69z2wepo/4060/)
+ 
 
 
 ## Tests
@@ -74,6 +82,9 @@ npm test
 ```
 
 ## Changelog
+### v1.1.1
+* Updated to React 0.13.
+* Updated local demo. 
 
 ### v1.1.0
 * Added `titles` property. See [demo](http://jsfiddle.net/azaviruha/kb3gN/10213/).
