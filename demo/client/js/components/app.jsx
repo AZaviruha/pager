@@ -21,7 +21,7 @@ var App = React.createClass({
         return (<Pager total={this.state.total}
                        current={this.state.current}
                        visiblePages={this.state.visiblePage}
-                       titles={{first: '<|'}}
+                       titles={{first: '<|', last: '>|'}}
                        onPageChanged={this.handlePageChanged}/>);
     }
 });

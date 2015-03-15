@@ -73,7 +73,6 @@ or
 ```
 
 [JSFiddle](http://jsfiddle.net/azaviruha/69z2wepo/4060/)
- 
 
 
 ## Tests
