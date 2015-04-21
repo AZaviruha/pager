@@ -162,7 +162,7 @@ var Pager = React.createClass({
         var titles = this.getTitles;
 
         return (
-            <nav>
+            <nav className="pagination">
               <Page className="pagination-btn"
                     key="pagination-first-page"
                     isDisabled={this.isPrevDisabled()} 

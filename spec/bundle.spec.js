@@ -163,7 +163,7 @@ var Pager = React.createClass({displayName: "Pager",
         var titles = this.getTitles;
 
         return (
-            React.createElement("nav", null, 
+            React.createElement("nav", {className: "pagination"}, 
               React.createElement(Page, {className: "pagination-btn", 
                     key: "pagination-first-page", 
                     isDisabled: this.isPrevDisabled(), 
