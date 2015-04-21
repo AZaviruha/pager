@@ -164,39 +164,37 @@ var Pager = React.createClass({displayName: "Pager",
 
         return (
             React.createElement("nav", null, 
-                React.createElement("ul", {className: "pagination"}, 
-                    React.createElement(Page, {className: "btn-first-page", 
-                          key: "btn-first-page", 
-                          isDisabled: this.isPrevDisabled(), 
-                          onClick: this.handleFirstPage}, titles('first')), 
+              React.createElement(Page, {className: "pagination-btn", 
+                    key: "pagination-first-page", 
+                    isDisabled: this.isPrevDisabled(), 
+                    onClick: this.handleFirstPage}, titles('first')), 
 
-                    React.createElement(Page, {className: "btn-prev-page", 
-                          key: "btn-prev-page", 
-                          isDisabled: this.isPrevDisabled(), 
-                          onClick: this.handlePreviousPage}, titles('prev')), 
+              React.createElement(Page, {className: "pagination-btn", 
+                    key: "pagination-prev-page", 
+                    isDisabled: this.isPrevDisabled(), 
+                    onClick: this.handlePreviousPage}, titles('prev')), 
 
-                    React.createElement(Page, {className: "btn-prev-more", 
-                          key: "btn-prev-more", 
-                          isHidden: this.isPrevMoreHidden(), 
-                          onClick: this.handleMorePrevPages}, titles('prevSet')), 
+              React.createElement(Page, {className: "pagination-btn", 
+                    key: "pagination-prev-more", 
+                    isHidden: this.isPrevMoreHidden(), 
+                    onClick: this.handleMorePrevPages}, titles('prevSet')), 
 
-                    this.renderPages( this.visibleRange()), 
+              this.renderPages( this.visibleRange()), 
 
-                    React.createElement(Page, {className: "btn-next-more", 
-                          key: "btn-next-more", 
-                          isHidden: this.isNextMoreHidden(), 
-                          onClick: this.handleMoreNextPages}, titles('nextSet')), 
+              React.createElement(Page, {className: "pagination-btn", 
+                    key: "pagination-next-more", 
+                    isHidden: this.isNextMoreHidden(), 
+                    onClick: this.handleMoreNextPages}, titles('nextSet')), 
 
-                    React.createElement(Page, {className: "btn-next-page", 
-                          key: "btn-next-page", 
-                          isDisabled: this.isNextDisabled(), 
-                          onClick: this.handleNextPage}, titles('next')), 
+              React.createElement(Page, {className: "pagination-btn", 
+                    key: "pagination-next-page", 
+                    isDisabled: this.isNextDisabled(), 
+                    onClick: this.handleNextPage}, titles('next')), 
 
-                    React.createElement(Page, {className: "btn-last-page", 
-                          key: "btn-last-page", 
-                          isDisabled: this.isNextDisabled(), 
-                          onClick: this.handleLastPage}, titles('last'))
-                )
+              React.createElement(Page, {className: "pagination-btn", 
+                    key: "pagination-last-page", 
+                    isDisabled: this.isNextDisabled(), 
+                    onClick: this.handleLastPage}, titles('last'))
             )
         );
     },
@@ -217,7 +215,7 @@ var Pager = React.createClass({displayName: "Pager",
               , isActive = (self.props.current === current);
 
             return (React.createElement(Page, {key: idx, isActive: isActive, 
-                          className: "btn-numbered-page", 
+                          className: "pagination-btn", 
                           onClick: onClick}, el));
         });
     }
@@ -236,8 +234,8 @@ var Page = React.createClass({displayName: "Page",
                       + (props.isDisabled ? ' disabled' : '');
 
         return (
-            React.createElement("li", {key: this.props.key, className: css}, 
-                React.createElement("a", {onClick: this.props.onClick}, this.props.children)
+            React.createElement("button", {key: this.props.key, className: css, onClick: this.props.onClick}, 
+              this.props.children
             )
         );
     }
@@ -259,7 +257,7 @@ module.exports = Pager;
 },{"react":176}],2:[function(require,module,exports){
 /*!
  * https://github.com/es-shims/es5-shim
- * @license es5-shim Copyright 2009-2014 by contributors, MIT License
+ * @license es5-shim Copyright 2009-2015 by contributors, MIT License
  * see https://github.com/es-shims/es5-shim/blob/master/LICENSE
  */
 
@@ -1114,25 +1112,22 @@ defineProperties(Date.prototype, {
     }
 }, hasNegativeDateBug);
 
-
 // ES5 15.9.5.44
 // http://es5.github.com/#x15.9.5.44
 // This function provides a String representation of a Date object for use by
 // JSON.stringify (15.12.3).
-var dateToJSONIsSupported = false;
-try {
-    dateToJSONIsSupported = (
-        Date.prototype.toJSON &&
-        new Date(NaN).toJSON() === null &&
-        new Date(negativeDate).toJSON().indexOf(negativeYearString) !== -1 &&
-        Date.prototype.toJSON.call({ // generic
-            toISOString: function () {
-                return true;
-            }
-        })
-    );
-} catch (e) {
-}
+var dateToJSONIsSupported = (function () {
+    try {
+        return Date.prototype.toJSON &&
+            new Date(NaN).toJSON() === null &&
+            new Date(negativeDate).toJSON().indexOf(negativeYearString) !== -1 &&
+            Date.prototype.toJSON.call({ // generic
+                toISOString: function () { return true; }
+            });
+    } catch (e) {
+        return false;
+    }
+}());
 if (!dateToJSONIsSupported) {
     Date.prototype.toJSON = function toJSON(key) {
         // When the toJSON method is called with argument key, the following
@@ -1141,23 +1136,22 @@ if (!dateToJSONIsSupported) {
         // 1.  Let O be the result of calling ToObject, giving it the this
         // value as its argument.
         // 2. Let tv be ES.ToPrimitive(O, hint Number).
-        var o = Object(this),
-            tv = ES.ToPrimitive(o),
-            toISO;
+        var O = Object(this);
+        var tv = ES.ToPrimitive(O);
         // 3. If tv is a Number and is not finite, return null.
         if (typeof tv === 'number' && !isFinite(tv)) {
             return null;
         }
         // 4. Let toISO be the result of calling the [[Get]] internal method of
         // O with argument "toISOString".
-        toISO = o.toISOString;
+        var toISO = O.toISOString;
         // 5. If IsCallable(toISO) is false, throw a TypeError exception.
-        if (typeof toISO !== 'function') {
+        if (!isCallable(toISO)) {
             throw new TypeError('toISOString property is not callable');
         }
         // 6. Return the result of calling the [[Call]] internal method of
         //  toISO with O as the this value and an empty argument list.
-        return toISO.call(o);
+        return toISO.call(O);
 
         // NOTE 1 The argument is ignored.
 
@@ -1202,7 +1196,7 @@ if (!Date.parse || doesNotParseY2KNewYear || acceptsInvalidDates || !supportsExt
                     length >= 1 ? new NativeDate(Y) :
                                   new NativeDate();
                 // Prevent mixups with unfixed Date object
-                date.constructor = Date;
+                defineProperties(date, { constructor: Date }, true);
                 return date;
             }
             return NativeDate.apply(this, arguments);
@@ -1331,7 +1325,6 @@ if (!Date.now) {
     };
 }
 
-
 //
 // Number
 // ======
@@ -1352,10 +1345,11 @@ var toFixedHelpers = {
   data: [0, 0, 0, 0, 0, 0],
   multiply: function multiply(n, c) {
       var i = -1;
+      var c2 = c;
       while (++i < toFixedHelpers.size) {
-          c += n * toFixedHelpers.data[i];
-          toFixedHelpers.data[i] = c % toFixedHelpers.base;
-          c = Math.floor(c / toFixedHelpers.base);
+          c2 += n * toFixedHelpers.data[i];
+          toFixedHelpers.data[i] = c2 % toFixedHelpers.base;
+          c2 = Math.floor(c2 / toFixedHelpers.base);
       }
   },
   divide: function divide(n) {
@@ -1386,13 +1380,14 @@ var toFixedHelpers = {
   },
   log: function log(x) {
       var n = 0;
-      while (x >= 4096) {
+      var x2 = x;
+      while (x2 >= 4096) {
           n += 12;
-          x /= 4096;
+          x2 /= 4096;
       }
-      while (x >= 2) {
+      while (x2 >= 2) {
           n += 1;
-          x /= 2;
+          x2 /= 2;
       }
       return n;
   }
@@ -1485,7 +1480,6 @@ defineProperties(NumberPrototype, {
     }
 }, hasToFixedBugs);
 
-
 //
 // String
 // ======
@@ -1529,19 +1523,19 @@ if (
                 return string_split.call(this, separator, limit);
             }
 
-            var output = [],
-                flags = (separator.ignoreCase ? 'i' : '') +
+            var output = [];
+            var flags = (separator.ignoreCase ? 'i' : '') +
                         (separator.multiline ? 'm' : '') +
                         (separator.extended ? 'x' : '') + // Proposed for ES6
                         (separator.sticky ? 'y' : ''), // Firefox 3+
                 lastLastIndex = 0,
                 // Make `global` and avoid `lastIndex` issues by working with a copy
                 separator2, match, lastIndex, lastLength;
-            separator = new RegExp(separator.source, flags + 'g');
+            var separatorCopy = new RegExp(separator.source, flags + 'g');
             string += ''; // Type-convert
             if (!compliantExecNpcg) {
                 // Doesn't need flags gy, but they don't hurt
-                separator2 = new RegExp('^' + separator.source + '$(?!\\s)', flags);
+                separator2 = new RegExp('^' + separatorCopy.source + '$(?!\\s)', flags);
             }
             /* Values for `limit`, per the spec:
              * If undefined: 4294967295 // Math.pow(2, 32) - 1
@@ -1550,12 +1544,12 @@ if (
              * If negative number: 4294967296 - Math.floor(Math.abs(limit))
              * If other: Type-convert, then use the above rules
              */
-            limit = typeof limit === 'undefined' ?
+            var splitLimit = typeof limit === 'undefined' ?
                 -1 >>> 0 : // Math.pow(2, 32) - 1
                 ES.ToUint32(limit);
-            match = separator.exec(string);
+            match = separatorCopy.exec(string);
             while (match) {
-                // `separator.lastIndex` is not reliable cross-browser
+                // `separatorCopy.lastIndex` is not reliable cross-browser
                 lastIndex = match.index + match[0].length;
                 if (lastIndex > lastLastIndex) {
                     output.push(string.slice(lastLastIndex, match.index));
@@ -1577,23 +1571,23 @@ if (
                     }
                     lastLength = match[0].length;
                     lastLastIndex = lastIndex;
-                    if (output.length >= limit) {
+                    if (output.length >= splitLimit) {
                         break;
                     }
                 }
-                if (separator.lastIndex === match.index) {
-                    separator.lastIndex++; // Avoid an infinite loop
+                if (separatorCopy.lastIndex === match.index) {
+                    separatorCopy.lastIndex++; // Avoid an infinite loop
                 }
-                match = separator.exec(string);
+                match = separatorCopy.exec(string);
             }
             if (lastLastIndex === string.length) {
-                if (lastLength || !separator.test('')) {
+                if (lastLength || !separatorCopy.test('')) {
                     output.push('');
                 }
             } else {
                 output.push(string.slice(lastLastIndex));
             }
-            return output.length > limit ? output.slice(0, limit) : output;
+            return output.length > splitLimit ? output.slice(0, splitLimit) : output;
         };
     }());
 
@@ -1649,11 +1643,11 @@ var string_substr = StringPrototype.substr;
 var hasNegativeSubstrBug = ''.substr && '0b'.substr(-1) !== 'b';
 defineProperties(StringPrototype, {
     substr: function substr(start, length) {
-        return string_substr.call(
-            this,
-            start < 0 ? ((start = this.length + start) < 0 ? 0 : start) : start,
-            length
-        );
+        var normalizedStart = start;
+        if (start < 0) {
+            normalizedStart = Math.max(this.length + start, 0);
+        }
+        return string_substr.call(this, normalizedStart, length);
     }
 }, hasNegativeSubstrBug);
 
@@ -1683,12 +1677,10 @@ if (parseInt(ws + '08') !== 8 || parseInt(ws + '0x16') !== 22) {
     /*global parseInt: true */
     parseInt = (function (origParseInt) {
         var hexRegex = /^0[xX]/;
-        return function parseIntES5(str, radix) {
-            str = String(str).trim();
-            if (!Number(radix)) {
-                radix = hexRegex.test(str) ? 16 : 10;
-            }
-            return origParseInt(str, radix);
+        return function parseInt(str, radix) {
+            var string = String(str).trim();
+            var defaultedRadix = Number(radix) || (hexRegex.test(string) ? 16 : 10);
+            return origParseInt(string, defaultedRadix);
         };
     }(parseInt));
 }
@@ -2420,7 +2412,9 @@ var isUnitlessNumber = {
   columnCount: true,
   flex: true,
   flexGrow: true,
+  flexPositive: true,
   flexShrink: true,
+  flexNegative: true,
   fontWeight: true,
   lineClamp: true,
   lineHeight: true,
@@ -2433,7 +2427,9 @@ var isUnitlessNumber = {
 
   // SVG-related properties
   fillOpacity: true,
-  strokeOpacity: true
+  strokeDashoffset: true,
+  strokeOpacity: true,
+  strokeWidth: true
 };
 
 /**
@@ -5520,6 +5516,7 @@ var HTMLDOMPropertyConfig = {
     headers: null,
     height: MUST_USE_ATTRIBUTE,
     hidden: MUST_USE_ATTRIBUTE | HAS_BOOLEAN_VALUE,
+    high: null,
     href: null,
     hrefLang: null,
     htmlFor: null,
@@ -5530,6 +5527,7 @@ var HTMLDOMPropertyConfig = {
     lang: null,
     list: MUST_USE_ATTRIBUTE,
     loop: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
+    low: null,
     manifest: MUST_USE_ATTRIBUTE,
     marginHeight: null,
     marginWidth: null,
@@ -5544,6 +5542,7 @@ var HTMLDOMPropertyConfig = {
     name: null,
     noValidate: HAS_BOOLEAN_VALUE,
     open: HAS_BOOLEAN_VALUE,
+    optimum: null,
     pattern: null,
     placeholder: null,
     poster: null,
@@ -5557,6 +5556,7 @@ var HTMLDOMPropertyConfig = {
     rowSpan: null,
     sandbox: null,
     scope: null,
+    scoped: HAS_BOOLEAN_VALUE,
     scrolling: null,
     seamless: MUST_USE_ATTRIBUTE | HAS_BOOLEAN_VALUE,
     selected: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
@@ -5598,7 +5598,9 @@ var HTMLDOMPropertyConfig = {
     itemID: MUST_USE_ATTRIBUTE,
     itemRef: MUST_USE_ATTRIBUTE,
     // property is supported for OpenGraph in meta tags.
-    property: null
+    property: null,
+    // IE-only attribute that controls focus behavior
+    unselectable: MUST_USE_ATTRIBUTE
   },
   DOMAttributeNames: {
     acceptCharset: 'accept-charset',
@@ -6249,7 +6251,7 @@ if ("production" !== process.env.NODE_ENV) {
   }
 }
 
-React.version = '0.13.0';
+React.version = '0.13.2';
 
 module.exports = React;
 
@@ -8554,6 +8556,14 @@ var ReactCompositeComponentMixin = {
         this.getName() || 'a component'
       ) : null);
       ("production" !== process.env.NODE_ENV ? warning(
+        !inst.getDefaultProps ||
+        inst.getDefaultProps.isReactClassApproved,
+        'getDefaultProps was defined on %s, a plain JavaScript class. ' +
+        'This is only supported for classes created using React.createClass. ' +
+        'Use a static property to define defaultProps instead.',
+        this.getName() || 'a component'
+      ) : null);
+      ("production" !== process.env.NODE_ENV ? warning(
         !inst.propTypes,
         'propTypes was defined as an instance property on %s. Use a static ' +
         'property to define propTypes instead.',
@@ -9122,7 +9132,7 @@ var ReactCompositeComponentMixin = {
         this._renderedComponent,
         thisID,
         transaction,
-        context
+        this._processChildContext(context)
       );
       this._replaceNodeWithMarkupByID(prevComponentID, nextMarkup);
     }
@@ -9973,6 +9983,7 @@ ReactDOMComponent.Mixin = {
             styleUpdates[styleName] = '';
           }
         }
+        this._previousStyleCopy = null;
       } else if (registrationNameModules.hasOwnProperty(propKey)) {
         deleteListener(this._rootNodeID, propKey);
       } else if (
@@ -9995,6 +10006,8 @@ ReactDOMComponent.Mixin = {
       if (propKey === STYLE) {
         if (nextProp) {
           nextProp = this._previousStyleCopy = assign({}, nextProp);
+        } else {
+          this._previousStyleCopy = null;
         }
         if (lastProp) {
           // Unset styles on `lastProp` but not on `nextProp`.
@@ -10752,7 +10765,9 @@ function updateOptions(component, propValue) {
         return;
       }
     }
-    options[0].selected = true;
+    if (options.length) {
+      options[0].selected = true;
+    }
   }
 }
 
@@ -11705,8 +11720,8 @@ var ReactDefaultPerf = {
           ReactDefaultPerf._allMeasurements.length - 1
         ].totalTime = performanceNow() - start;
         return rv;
-      } else if (moduleName === 'ReactDOMIDOperations' ||
-        moduleName === 'ReactComponentBrowserEnvironment') {
+      } else if (fnName === '_mountImageIntoNode' ||
+          moduleName === 'ReactDOMIDOperations') {
         start = performanceNow();
         rv = func.apply(this, args);
         totalTime = performanceNow() - start;
@@ -11752,6 +11767,10 @@ var ReactDefaultPerf = {
         (fnName === 'mountComponent' ||
         fnName === 'updateComponent' || fnName === '_renderValidatedComponent')))) {
 
+        if (typeof this._currentElement.type === 'string') {
+          return func.apply(this, args);
+        }
+
         var rootNodeID = fnName === 'mountComponent' ?
           args[0] :
           this._rootNodeID;
@@ -11785,9 +11804,7 @@ var ReactDefaultPerf = {
         }
 
         entry.displayNames[rootNodeID] = {
-          current: typeof this._currentElement.type === 'string' ?
-            this._currentElement.type :
-            this.getName(),
+          current: this.getName(),
           owner: this._currentElement._owner ?
             this._currentElement._owner.getName() :
             '<root>'
@@ -12611,9 +12628,9 @@ function warnForPropsMutation(propName, element) {
 
   ("production" !== process.env.NODE_ENV ? warning(
     false,
-    'Don\'t set .props.%s of the React component%s. ' +
-    'Instead, specify the correct value when ' +
-    'initially creating the element.%s',
+    'Don\'t set .props.%s of the React component%s. Instead, specify the ' +
+    'correct value when initially creating the element or use ' +
+    'React.cloneElement to make a new element with updated props.%s',
     propName,
     elementInfo,
     ownerInfo
@@ -17062,7 +17079,7 @@ var ReactTestUtils = {
   isDOMComponent: function(inst) {
     // TODO: Fix this heuristic. It's just here because composites can currently
     // pretend to be DOM components.
-    return !!(inst && inst.getDOMNode && inst.tagName);
+    return !!(inst && inst.tagName && inst.getDOMNode);
   },
 
   isDOMComponentElement: function(inst) {
@@ -20722,6 +20739,7 @@ function createFullPageComponent(tag) {
   var elementFactory = ReactElement.createFactory(tag);
 
   var FullPageComponent = ReactClass.createClass({
+    tagName: tag.toUpperCase(),
     displayName: 'ReactFullPageComponent' + tag,
 
     componentWillUnmount: function() {
@@ -21969,6 +21987,7 @@ assign(
 function isInternalComponentType(type) {
   return (
     typeof type === 'function' &&
+    typeof type.prototype !== 'undefined' &&
     typeof type.prototype.mountComponent === 'function' &&
     typeof type.prototype.receiveComponent === 'function'
   );
@@ -23238,11 +23257,14 @@ module.exports = traverseAllChildren;
  * @providesModule update
  */
 
+ /* global hasOwnProperty:true */
+
 'use strict';
 
 var assign = require("./Object.assign");
 var keyOf = require("./keyOf");
 var invariant = require("./invariant");
+var hasOwnProperty = {}.hasOwnProperty;
 
 function shallowCopy(x) {
   if (Array.isArray(x)) {
@@ -23302,7 +23324,7 @@ function update(value, spec) {
     COMMAND_SET
   ) : invariant(typeof spec === 'object'));
 
-  if (spec.hasOwnProperty(COMMAND_SET)) {
+  if (hasOwnProperty.call(spec, COMMAND_SET)) {
     ("production" !== process.env.NODE_ENV ? invariant(
       Object.keys(spec).length === 1,
       'Cannot have more than one key in an object with %s',
@@ -23314,7 +23336,7 @@ function update(value, spec) {
 
   var nextValue = shallowCopy(value);
 
-  if (spec.hasOwnProperty(COMMAND_MERGE)) {
+  if (hasOwnProperty.call(spec, COMMAND_MERGE)) {
     var mergeObj = spec[COMMAND_MERGE];
     ("production" !== process.env.NODE_ENV ? invariant(
       mergeObj && typeof mergeObj === 'object',
@@ -23331,21 +23353,21 @@ function update(value, spec) {
     assign(nextValue, spec[COMMAND_MERGE]);
   }
 
-  if (spec.hasOwnProperty(COMMAND_PUSH)) {
+  if (hasOwnProperty.call(spec, COMMAND_PUSH)) {
     invariantArrayCase(value, spec, COMMAND_PUSH);
     spec[COMMAND_PUSH].forEach(function(item) {
       nextValue.push(item);
     });
   }
 
-  if (spec.hasOwnProperty(COMMAND_UNSHIFT)) {
+  if (hasOwnProperty.call(spec, COMMAND_UNSHIFT)) {
     invariantArrayCase(value, spec, COMMAND_UNSHIFT);
     spec[COMMAND_UNSHIFT].forEach(function(item) {
       nextValue.unshift(item);
     });
   }
 
-  if (spec.hasOwnProperty(COMMAND_SPLICE)) {
+  if (hasOwnProperty.call(spec, COMMAND_SPLICE)) {
     ("production" !== process.env.NODE_ENV ? invariant(
       Array.isArray(value),
       'Expected %s target to be an array; got %s',
@@ -23371,7 +23393,7 @@ function update(value, spec) {
     });
   }
 
-  if (spec.hasOwnProperty(COMMAND_APPLY)) {
+  if (hasOwnProperty.call(spec, COMMAND_APPLY)) {
     ("production" !== process.env.NODE_ENV ? invariant(
       typeof spec[COMMAND_APPLY] === 'function',
       'update(): expected spec of %s to be a function; got %s.',

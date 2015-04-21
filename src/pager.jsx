@@ -163,39 +163,37 @@ var Pager = React.createClass({
 
         return (
             <nav>
-                <ul className="pagination">
-                    <Page className="btn-first-page"
-                          key="btn-first-page"
-                          isDisabled={this.isPrevDisabled()} 
-                          onClick={this.handleFirstPage}>{titles('first')}</Page>
+              <Page className="pagination-btn"
+                    key="pagination-first-page"
+                    isDisabled={this.isPrevDisabled()} 
+                    onClick={this.handleFirstPage}>{titles('first')}</Page>
 
-                    <Page className="btn-prev-page"
-                          key="btn-prev-page"
-                          isDisabled={this.isPrevDisabled()} 
-                          onClick={this.handlePreviousPage}>{titles('prev')}</Page>
+              <Page className="pagination-btn"
+                    key="pagination-prev-page"
+                    isDisabled={this.isPrevDisabled()} 
+                    onClick={this.handlePreviousPage}>{titles('prev')}</Page>
 
-                    <Page className="btn-prev-more"
-                          key="btn-prev-more"
-                          isHidden={this.isPrevMoreHidden()}
-                          onClick={this.handleMorePrevPages}>{titles('prevSet')}</Page>
+              <Page className="pagination-btn"
+                    key="pagination-prev-more"
+                    isHidden={this.isPrevMoreHidden()}
+                    onClick={this.handleMorePrevPages}>{titles('prevSet')}</Page>
 
-                    {this.renderPages( this.visibleRange() )}
+              {this.renderPages( this.visibleRange() )}
 
-                    <Page className="btn-next-more"
-                          key="btn-next-more"
-                          isHidden={this.isNextMoreHidden()}
-                          onClick={this.handleMoreNextPages}>{titles('nextSet')}</Page>
+              <Page className="pagination-btn"
+                    key="pagination-next-more"
+                    isHidden={this.isNextMoreHidden()}
+                    onClick={this.handleMoreNextPages}>{titles('nextSet')}</Page>
 
-                    <Page className="btn-next-page"
-                          key="btn-next-page"
-                          isDisabled={this.isNextDisabled()}
-                          onClick={this.handleNextPage}>{titles('next')}</Page>
+              <Page className="pagination-btn"
+                    key="pagination-next-page"
+                    isDisabled={this.isNextDisabled()}
+                    onClick={this.handleNextPage}>{titles('next')}</Page>
 
-                    <Page className="btn-last-page"
-                          key="btn-last-page"
-                          isDisabled={this.isNextDisabled()}
-                          onClick={this.handleLastPage}>{titles('last')}</Page>
-                </ul>
+              <Page className="pagination-btn"
+                    key="pagination-last-page"
+                    isDisabled={this.isNextDisabled()}
+                    onClick={this.handleLastPage}>{titles('last')}</Page>
             </nav>
         );
     },
@@ -216,7 +214,7 @@ var Pager = React.createClass({
               , isActive = (self.props.current === current);
 
             return (<Page key={idx} isActive={isActive}
-                          className="btn-numbered-page"
+                          className="pagination-btn"
                           onClick={onClick}>{el}</Page>);
         });
     }
@@ -235,9 +233,9 @@ var Page = React.createClass({
                       + (props.isDisabled ? ' disabled' : '');
 
         return (
-            <li key={this.props.key} className={css}>
-                <a onClick={this.props.onClick}>{this.props.children}</a>
-            </li>
+            <button key={this.props.key} className={css} onClick={this.props.onClick}>
+              {this.props.children}
+            </button>
         );
     }
 });    
