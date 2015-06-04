@@ -173,14 +173,14 @@ var Pager = React.createClass({displayName: "Pager",
                     isDisabled: this.isPrevDisabled(), 
                     onClick: this.handlePreviousPage}, titles('prev')), 
 
-              React.createElement(Page, {className: "pagination-btn", 
+              React.createElement(Page, {className: "pagination-btn pagination-btn-more", 
                     key: "pagination-prev-more", 
                     isHidden: this.isPrevMoreHidden(), 
                     onClick: this.handleMorePrevPages}, titles('prevSet')), 
 
               this.renderPages( this.visibleRange()), 
 
-              React.createElement(Page, {className: "pagination-btn", 
+              React.createElement(Page, {className: "pagination-btn pagination-btn-more", 
                     key: "pagination-next-more", 
                     isHidden: this.isNextMoreHidden(), 
                     onClick: this.handleMoreNextPages}, titles('nextSet')), 
