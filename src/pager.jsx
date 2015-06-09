@@ -158,20 +158,26 @@ var Pager = React.createClass({
     },
     
     /* ========================= RENDERS ==============================*/
+    renderIcons: function ( name ) {
+      var useTag = '<use xlink:href="#icons--' + name + '" />';
+
+      return <svg dangerouslySetInnerHTML={{__html: useTag}} />
+    },
+
     render: function () {
         var titles = this.getTitles;
 
         return (
             <nav className="pagination">
               <Page className="pagination-btn"
-                    key="pagination-first-page"
-                    isDisabled={this.isPrevDisabled()} 
-                    onClick={this.handleFirstPage}>{titles('first')}</Page>
-
-              <Page className="pagination-btn"
                     key="pagination-prev-page"
                     isDisabled={this.isPrevDisabled()} 
-                    onClick={this.handlePreviousPage}>{titles('prev')}</Page>
+                    onClick={this.handlePreviousPage}>{this.renderIcons('chevron-double-left')}</Page>
+
+              <Page className="pagination-btn"
+                    key="pagination-first-page"
+                    isDisabled={this.isPrevDisabled()} 
+                    onClick={this.handleFirstPage}>{this.renderIcons('chevron-left')}</Page>
 
               <Page className="pagination-btn pagination-btn-more"
                     key="pagination-prev-more"
@@ -186,14 +192,14 @@ var Pager = React.createClass({
                     onClick={this.handleMoreNextPages}>{titles('nextSet')}</Page>
 
               <Page className="pagination-btn"
-                    key="pagination-next-page"
-                    isDisabled={this.isNextDisabled()}
-                    onClick={this.handleNextPage}>{titles('next')}</Page>
-
-              <Page className="pagination-btn"
                     key="pagination-last-page"
                     isDisabled={this.isNextDisabled()}
-                    onClick={this.handleLastPage}>{titles('last')}</Page>
+                    onClick={this.handleLastPage}>{this.renderIcons('chevron-right')}</Page>
+
+              <Page className="pagination-btn"
+                    key="pagination-next-page"
+                    isDisabled={this.isNextDisabled()}
+                    onClick={this.handleNextPage}>{this.renderIcons('chevron-double-right')}</Page>
             </nav>
         );
     },
