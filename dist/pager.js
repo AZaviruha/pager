@@ -158,20 +158,26 @@ var Pager = React.createClass({displayName: "Pager",
     },
     
     /* ========================= RENDERS ==============================*/
+    renderIcons: function ( name ) {
+      var useTag = '<use xlink:href="#icons--' + name + '" />';
+
+      return React.createElement("svg", {dangerouslySetInnerHTML: {__html: useTag}})
+    },
+
     render: function () {
         var titles = this.getTitles;
 
         return (
             React.createElement("nav", {className: "pagination"}, 
               React.createElement(Page, {className: "pagination-btn", 
-                    key: "pagination-first-page", 
-                    isDisabled: this.isPrevDisabled(), 
-                    onClick: this.handleFirstPage}, titles('first')), 
-
-              React.createElement(Page, {className: "pagination-btn", 
                     key: "pagination-prev-page", 
                     isDisabled: this.isPrevDisabled(), 
-                    onClick: this.handlePreviousPage}, titles('prev')), 
+                    onClick: this.handlePreviousPage}, this.renderIcons('chevron-double-left')), 
+
+              React.createElement(Page, {className: "pagination-btn", 
+                    key: "pagination-first-page", 
+                    isDisabled: this.isPrevDisabled(), 
+                    onClick: this.handleFirstPage}, this.renderIcons('chevron-left')), 
 
               React.createElement(Page, {className: "pagination-btn pagination-btn-more", 
                     key: "pagination-prev-more", 
@@ -186,14 +192,14 @@ var Pager = React.createClass({displayName: "Pager",
                     onClick: this.handleMoreNextPages}, titles('nextSet')), 
 
               React.createElement(Page, {className: "pagination-btn", 
-                    key: "pagination-next-page", 
-                    isDisabled: this.isNextDisabled(), 
-                    onClick: this.handleNextPage}, titles('next')), 
-
-              React.createElement(Page, {className: "pagination-btn", 
                     key: "pagination-last-page", 
                     isDisabled: this.isNextDisabled(), 
-                    onClick: this.handleLastPage}, titles('last'))
+                    onClick: this.handleLastPage}, this.renderIcons('chevron-right')), 
+
+              React.createElement(Page, {className: "pagination-btn", 
+                    key: "pagination-next-page", 
+                    isDisabled: this.isNextDisabled(), 
+                    onClick: this.handleNextPage}, this.renderIcons('chevron-double-right'))
             )
         );
     },
