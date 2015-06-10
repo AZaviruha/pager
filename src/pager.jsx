@@ -33,7 +33,7 @@ var React = require( 'react' );
  * ## Constants
  */
 var BASE_SHIFT  = 0
-  , TITLE_SHIFT = 1
+  , TITLE_SHIFT = 0
   , TITLES = {
         first:   'First',
         prev:    '\u00AB',
