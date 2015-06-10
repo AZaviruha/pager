@@ -172,12 +172,12 @@ var Pager = React.createClass({
               <Page className="pagination-btn"
                     key="pagination-prev-page"
                     isDisabled={this.isPrevDisabled()} 
-                    onClick={this.handlePreviousPage}>{this.renderIcons('chevron-double-left')}</Page>
+                    onClick={this.handleFirstPage}>{this.renderIcons('chevron-double-left')}</Page>
 
               <Page className="pagination-btn"
                     key="pagination-first-page"
                     isDisabled={this.isPrevDisabled()} 
-                    onClick={this.handleFirstPage}>{this.renderIcons('chevron-left')}</Page>
+                    onClick={this.handlePreviousPage}>{this.renderIcons('chevron-left')}</Page>
 
               <Page className="pagination-btn pagination-btn-more"
                     key="pagination-prev-more"
@@ -194,12 +194,12 @@ var Pager = React.createClass({
               <Page className="pagination-btn"
                     key="pagination-last-page"
                     isDisabled={this.isNextDisabled()}
-                    onClick={this.handleLastPage}>{this.renderIcons('chevron-right')}</Page>
+                    onClick={this.handleNextPage}>{this.renderIcons('chevron-right')}</Page>
 
               <Page className="pagination-btn"
                     key="pagination-next-page"
                     isDisabled={this.isNextDisabled()}
-                    onClick={this.handleNextPage}>{this.renderIcons('chevron-double-right')}</Page>
+                    onClick={this.handleLastPage}>{this.renderIcons('chevron-double-right')}</Page>
             </nav>
         );
     },

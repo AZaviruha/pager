@@ -161,7 +161,7 @@ var Pager = React.createClass({displayName: "Pager",
     renderIcons: function ( name ) {
       var useTag = '<use xlink:href="#icons--' + name + '" />';
 
-      return React.createElement("svg", {dangerouslySetInnerHTML: {__html: useTag}})
+      return React.createElement("svg", {className: "pagination-btn-icon", dangerouslySetInnerHTML: {__html: useTag}})
     },
 
     render: function () {
@@ -172,12 +172,12 @@ var Pager = React.createClass({displayName: "Pager",
               React.createElement(Page, {className: "pagination-btn", 
                     key: "pagination-prev-page", 
                     isDisabled: this.isPrevDisabled(), 
-                    onClick: this.handlePreviousPage}, this.renderIcons('chevron-double-left')), 
+                    onClick: this.handleFirstPage}, this.renderIcons('chevron-double-left')), 
 
               React.createElement(Page, {className: "pagination-btn", 
                     key: "pagination-first-page", 
                     isDisabled: this.isPrevDisabled(), 
-                    onClick: this.handleFirstPage}, this.renderIcons('chevron-left')), 
+                    onClick: this.handlePreviousPage}, this.renderIcons('chevron-left')), 
 
               React.createElement(Page, {className: "pagination-btn pagination-btn-more", 
                     key: "pagination-prev-more", 
@@ -194,12 +194,12 @@ var Pager = React.createClass({displayName: "Pager",
               React.createElement(Page, {className: "pagination-btn", 
                     key: "pagination-last-page", 
                     isDisabled: this.isNextDisabled(), 
-                    onClick: this.handleLastPage}, this.renderIcons('chevron-right')), 
+                    onClick: this.handleNextPage}, this.renderIcons('chevron-right')), 
 
               React.createElement(Page, {className: "pagination-btn", 
                     key: "pagination-next-page", 
                     isDisabled: this.isNextDisabled(), 
-                    onClick: this.handleNextPage}, this.renderIcons('chevron-double-right'))
+                    onClick: this.handleLastPage}, this.renderIcons('chevron-double-right'))
             )
         );
     },
