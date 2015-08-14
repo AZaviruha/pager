@@ -159,7 +159,7 @@ var Pager = React.createClass({displayName: "Pager",
     
     /* ========================= RENDERS ==============================*/
     renderIcons: function ( name ) {
-      var useTag = '<use xlink:href="#icons--' + name + '" />';
+      var useTag = '<use xlink:href="#dt-icons-' + name + '" />';
 
       return React.createElement("svg", {className: "pagination-btn-icon", dangerouslySetInnerHTML: {__html: useTag}})
     },

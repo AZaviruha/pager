@@ -33,7 +33,7 @@ var React = require( 'react' );
  * ## Constants
  */
 var BASE_SHIFT  = 0
-  , TITLE_SHIFT = 0
+  , TITLE_SHIFT = 1
   , TITLES = {
         first:   'First',
         prev:    '\u00AB',
@@ -159,7 +159,7 @@ var Pager = React.createClass({
     
     /* ========================= RENDERS ==============================*/
     renderIcons: function ( name ) {
-      var useTag = '<use xlink:href="#icons--' + name + '" />';
+      var useTag = '<use xlink:href="#dt-icons-' + name + '" />';
 
       return <svg className="pagination-btn-icon" dangerouslySetInnerHTML={{__html: useTag}} />
     },
