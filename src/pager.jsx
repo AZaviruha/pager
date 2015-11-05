@@ -229,7 +229,7 @@ class Pager extends Component {
 
 
 
-const Page = ({isHidden, isActive, className, onClick, children, key}) => {
+const Page = ({isHidden, isActive, isDisabled, className, onClick, children, key}) => {
     if ( isHidden ) return null;
 
     const baseCss = className ? className + ' ' : ''
