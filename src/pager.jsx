@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 /**
  * # Stateless Pager component
  *
@@ -26,13 +24,13 @@
  *
  */
 
-var React = require( 'react' );
+import React, {Component, PropTypes} from 'react';
 
 
 /**
  * ## Constants
  */
-var BASE_SHIFT  = 0
+const BASE_SHIFT  = 0
   , TITLE_SHIFT = 1
   , TITLES = {
         first:   'First',
@@ -46,137 +44,140 @@ var BASE_SHIFT  = 0
 /**
  * ## Constructor
  */
-var Pager = React.createClass({
-    propTypes: {
-        current:               React.PropTypes.number.isRequired,
-        total:                 React.PropTypes.number.isRequired,
-        visiblePages:          React.PropTypes.number.isRequired,
-        titles:                React.PropTypes.object,
+class Pager extends Component {
+    constructor(props) {
+      super(props);
+    }
+    static propTypes = {
+        current:               PropTypes.number.isRequired,
+        total:                 PropTypes.number.isRequired,
+        visiblePages:          PropTypes.number.isRequired,
+        titles:                PropTypes.object,
 
-        onPageChanged:         React.PropTypes.func,
-        onPageSizeChanged:     React.PropTypes.func
-    },
-    
+        onPageChanged:         PropTypes.func,
+        onPageSizeChanged:     PropTypes.func
+    }
+
 
     /* ========================= HANDLERS =============================*/
-    handleFirstPage: function () {
+    handleFirstPage = () => {
         if ( this.isPrevDisabled() ) return;
         this.handlePageChanged( BASE_SHIFT );
-    },
-    
-    handlePreviousPage: function () {
+    }
+
+    handlePreviousPage = () => {
         if ( this.isPrevDisabled() ) return;
         this.handlePageChanged( this.props.current - TITLE_SHIFT );
-    },
+    }
 
-    handleNextPage: function () {
+    handleNextPage = () => {
         if ( this.isNextDisabled() ) return;
         this.handlePageChanged( this.props.current + TITLE_SHIFT );
-    },
+    }
 
-    handleLastPage: function () {
+    handleLastPage = () => {
         if ( this.isNextDisabled() ) return;
         this.handlePageChanged( this.props.total - TITLE_SHIFT );
-    },
-    
+    }
+
     /**
      * Chooses page, that is one before min of currently visible
      * pages.
      */
-    handleMorePrevPages: function () {
+    handleMorePrevPages = () => {
         var blocks = this.calcBlocks();
         this.handlePageChanged( blocks.current * blocks.size - TITLE_SHIFT );
-    },
+    }
 
     /**
      * Chooses page, that is one after max of currently visible
      * pages.
      */
-    handleMoreNextPages: function () {
+    handleMoreNextPages = () => {
         var blocks = this.calcBlocks();
         this.handlePageChanged( (blocks.current + TITLE_SHIFT) * blocks.size );
-    },
+    }
 
-    handlePageChanged: function ( el ) {
+    handlePageChanged = (el) => {
         var handler = this.props.onPageChanged;
         if ( handler ) handler( el );
-    },
-    
+    }
+
 
     /* ========================= HELPERS ==============================*/
     /**
      * Calculates "blocks" of buttons with page numbers.
      */
-    calcBlocks: function () {
+    calcBlocks = () => {
         var props      = this.props
           , total      = props.total
           , blockSize  = props.visiblePages
           , current    = props.current + TITLE_SHIFT
 
-          , blocks     = Math.ceil( total / blockSize ) 
+          , blocks     = Math.ceil( total / blockSize )
           , currBlock  = Math.ceil( current / blockSize ) - TITLE_SHIFT;
-        
+
         return {
             total:    blocks,
             current:  currBlock,
             size:     blockSize
         };
-    },
+    }
 
-    isPrevDisabled: function () {
+    isPrevDisabled = () => {
         return this.props.current <= BASE_SHIFT;
-    },
+    }
 
-    isNextDisabled: function () {
+    isNextDisabled = () => {
         return this.props.current >= ( this.props.total - TITLE_SHIFT );
-    },
+    }
 
-    isPrevMoreHidden: function () {
+    isPrevMoreHidden = () => {
         var blocks = this.calcBlocks();
-        return ( blocks.total === TITLE_SHIFT ) 
+        return ( blocks.total === TITLE_SHIFT )
                || ( blocks.current === BASE_SHIFT );
-    },
+    }
 
-    isNextMoreHidden: function () {
+    isNextMoreHidden = () => {
         var blocks = this.calcBlocks();
-        return ( blocks.total === TITLE_SHIFT ) 
+        return ( blocks.total === TITLE_SHIFT )
                || ( blocks.current === (blocks.total - TITLE_SHIFT) );
-    },
+    }
 
-    visibleRange: function () {
+    visibleRange = () => {
         var blocks  = this.calcBlocks()
           , start   = blocks.current * blocks.size
           , delta   = this.props.total - start
           , end     = start + ( (delta > blocks.size) ? blocks.size : delta );
         return [ start + TITLE_SHIFT, end + TITLE_SHIFT ];
-    },
+    }
 
-    
-    getTitles: function ( key ) {
+
+    getTitles = (key) => {
         var pTitles = this.props.titles || {};
         return pTitles[ key ] || TITLES[ key ];
-    },
-    
+    }
+
     /* ========================= RENDERS ==============================*/
-    renderIcons: function ( name ) {
+    renderIcons = (name) => {
       var useTag = '<use xlink:href="#dt-icons-' + name + '" />';
 
       return <svg className="pagination-btn-icon" dangerouslySetInnerHTML={{__html: useTag}} />
-    },
+    }
 
-    render: function () {
+    render() {
         var titles = this.getTitles;
 
         return (
             <nav className="pagination">
               <Page className="pagination-btn"
                     key="pagination-prev-page"
-                    isDisabled={this.isPrevDisabled()} 
+                    isDisabled={this.isPrevDisabled()}
                     onClick={this.handleFirstPage}>{this.renderIcons('chevron-double-left')}</Page>
 
               <Page className="pagination-btn"
                     key="pagination-first-page"
-                    isDisabled={this.isPrevDisabled()} 
+                    isDisabled={this.isPrevDisabled()}
                     onClick={this.handlePreviousPage}>{this.renderIcons('chevron-left')}</Page>
 
               <Page className="pagination-btn pagination-btn-more"
@@ -202,7 +203,7 @@ var Pager = React.createClass({
                     onClick={this.handleLastPage}>{this.renderIcons('chevron-double-right')}</Page>
             </nav>
         );
-    },
+    }
 
 
     /**
@@ -211,9 +212,9 @@ var Pager = React.createClass({
      * @param {Number[]} range - pair of [start, from], `from` - not inclusive.
      * @return {React.Element[]} - array of React nodes.
      */
-    renderPages: function ( pair ) {
+    renderPages = (pair) => {
         var self = this;
-        
+
         return range( pair[0], pair[1] ).map(function ( el, idx ) {
             var current = el - TITLE_SHIFT
               , onClick = self.handlePageChanged.bind(null, current)
@@ -224,27 +225,24 @@ var Pager = React.createClass({
                           onClick={onClick}>{el}</Page>);
         });
     }
-});
+}
 
 
 
-var Page = React.createClass({
-    render: function () {
-        var props = this.props;
-        if ( props.isHidden ) return null;
+const Page = ({isHidden, isActive, className, onClick, children, key}) => {
+    if ( isHidden ) return null;
 
-        var baseCss = props.className ? props.className + ' ' : ''
-          , css     = baseCss
-                      + (props.isActive ? 'active' : '')
-                      + (props.isDisabled ? ' disabled' : '');
+    const baseCss = className ? className + ' ' : ''
+      , css     = baseCss
+                  + (isActive ? 'active' : '')
+                  + (isDisabled ? ' disabled' : '');
 
-        return (
-            <button key={this.props.key} className={css} onClick={this.props.onClick}>
-              {this.props.children}
-            </button>
-        );
-    }
-});    
+    return (
+        <button key={key} className={css} onClick={onClick}>
+          {children}
+        </button>
+    );
+}
 
 
 
@@ -254,7 +252,7 @@ function range ( start, end ) {
         res.push( i );
     }
 
-    return res; 
+    return res;
 }
 
-module.exports = Pager;
+export default Pager;
