@@ -21,8 +21,8 @@
     "url": "git@github.com:AZaviruha/pager.git"
   },
   "license": "MIT",
-  "dependencies": {
-    "react": "^0.13.0"
+  "peerDependencies": {
+    "react": "^0.13.0 || ^0.14.0"
   },
   "devDependencies": {
     "es5-shim": "^4.0.3",
@@ -42,6 +42,8 @@
     "karma-jasmine": "^0.3.1",
     "karma-phantomjs-launcher": "^0.1.4",
     "phantomjs": "^1.9.12",
+    "react": "^0.14.0",
+    "react-addons-test-utils": "^0.14.0",
     "yargs": "^3.5.4"
   }
 }

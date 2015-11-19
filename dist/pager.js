@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 /**
  * # Stateless Pager component
  *
