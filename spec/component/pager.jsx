@@ -3,8 +3,8 @@
 // See https://github.com/facebook/react/pull/347#issuecomment-24625365
 require( 'es5-shim' );
 
-var React      = require( 'react/addons' )
-  , TestUtils  = React.addons.TestUtils
+var React      = require( 'react' )
+  , TestUtils  = require( 'react-addons-test-utils' )
   , byTag      = TestUtils.findRenderedDOMComponentWithTag 
   , byClass    = TestUtils.findRenderedDOMComponentWithClass 
   , byClassAll = TestUtils.scryRenderedDOMComponentsWithClass 
@@ -77,7 +77,7 @@ describe( "react-pager component", function () {
           , numberedPages = byClassAll( pager, 'btn-numbered-page' );
         expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
         
-        TestUtils.Simulate.click( byTag( btnNextPage, 'a') );
+        TestUtils.Simulate.click( btnNextPage );
         function handler ( next ) { expect( next ).toEqual( 4 ); }
     });
     
@@ -88,7 +88,7 @@ describe( "react-pager component", function () {
           , numberedPages = byClassAll( pager, 'btn-numbered-page' );
         expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
         
-        TestUtils.Simulate.click( byTag( btnPrevPage, 'a') );
+        TestUtils.Simulate.click( btnPrevPage );
         function handler ( next ) { expect( next ).toEqual( 2 ); }
     });
 
@@ -99,7 +99,7 @@ describe( "react-pager component", function () {
           , numberedPages = byClassAll( pager, 'btn-numbered-page' );
         expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
         
-        TestUtils.Simulate.click( byTag( btnFirstPage, 'a') );
+        TestUtils.Simulate.click( btnFirstPage );
         function handler ( next ) { expect( next ).toEqual( 0 ); }
     });
 
@@ -110,7 +110,7 @@ describe( "react-pager component", function () {
           , numberedPages = byClassAll( pager, 'btn-numbered-page' );
         expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
         
-        TestUtils.Simulate.click( byTag( btnLastPage, 'a') );
+        TestUtils.Simulate.click( btnLastPage );
         function handler ( next ) { expect( next ).toEqual( 19 ); }
     });
 
@@ -130,7 +130,7 @@ describe( "react-pager component", function () {
           , numberedPages = byClassAll( pager, 'btn-numbered-page' );
         expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
         
-        TestUtils.Simulate.click( byTag( btnLastPage, 'a') );
+        TestUtils.Simulate.click( btnLastPage );
         function handler ( next ) { expect( next ).toEqual( 19 ); }
     });
     
