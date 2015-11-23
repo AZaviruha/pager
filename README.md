@@ -94,6 +94,10 @@ npm test
 * Added a few unit-tests.
 
 
+## Contributors
+* [tko](https://github.com/tko)
+
+
 [npm-image]: http://img.shields.io/badge/npm-v1.1.1-green.svg
 [npm-url]: https://www.npmjs.org/package/react-pager
 [cc-image]: https://codeclimate.com/github/AZaviruha/pager/badges/gpa.svg
