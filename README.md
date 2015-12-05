@@ -1,7 +1,7 @@
 # Stateless Pager component
-[![NPM version][npm-stats]][npm-url]
 [![Code Climate][cc-image]][cc-url]
-[![Build Status][travis-image]][travis-url]
+[![Build Status][travis-image]][travis-url]<br />
+[![NPM version][npm-stats]][npm-url]
 
 
 ## Getting started
@@ -98,7 +98,7 @@ npm test
 * [tko](https://github.com/tko)
 
 
-[npm-stats]: https://nodei.co/npm/react-form-generator.png?compact=true
+[npm-stats]: https://nodei.co/npm/react-pager.png?compact=true
 [npm-url]: https://www.npmjs.org/package/react-pager
 [cc-image]: https://codeclimate.com/github/AZaviruha/pager/badges/gpa.svg
 [cc-url]: https://codeclimate.com/github/AZaviruha/pager
