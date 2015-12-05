@@ -1,5 +1,5 @@
 # Stateless Pager component
-[![NPM version][npm-image]][npm-url]
+[![NPM version][npm-stats]][npm-url]
 [![Code Climate][cc-image]][cc-url]
 [![Build Status][travis-image]][travis-url]
 
@@ -98,7 +98,7 @@ npm test
 * [tko](https://github.com/tko)
 
 
-[npm-image]: http://img.shields.io/badge/npm-v1.1.1-green.svg
+[npm-stats]: https://nodei.co/npm/react-form-generator.png?compact=true
 [npm-url]: https://www.npmjs.org/package/react-pager
 [cc-image]: https://codeclimate.com/github/AZaviruha/pager/badges/gpa.svg
 [cc-url]: https://codeclimate.com/github/AZaviruha/pager
