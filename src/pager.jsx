@@ -213,7 +213,7 @@ var Pager = React.createClass({
               , onClick = self.handlePageChanged.bind(null, current)
               , isActive = (self.props.current === current);
 
-            return (<Page key={idx} isActive={isActive}
+            return (<Page key={idx} index={idx} isActive={isActive}
                           className="btn-numbered-page"
                           onClick={onClick}>{el}</Page>);
         });
@@ -233,7 +233,7 @@ var Page = React.createClass({
                       + (props.isDisabled ? ' disabled' : '');
 
         return (
-            <li key={this.props.key} className={css}>
+            <li key={this.props.index} className={css}>
                 <a onClick={this.props.onClick}>{this.props.children}</a>
             </li>
         );

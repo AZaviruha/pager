@@ -213,7 +213,7 @@ var Pager = React.createClass({displayName: "Pager",
               , onClick = self.handlePageChanged.bind(null, current)
               , isActive = (self.props.current === current);
 
-            return (React.createElement(Page, {key: idx, isActive: isActive, 
+            return (React.createElement(Page, {key: idx, index: idx, isActive: isActive, 
                           className: "btn-numbered-page", 
                           onClick: onClick}, el));
         });
@@ -233,7 +233,7 @@ var Page = React.createClass({displayName: "Page",
                       + (props.isDisabled ? ' disabled' : '');
 
         return (
-            React.createElement("li", {key: this.props.key, className: css}, 
+            React.createElement("li", {key: this.props.index, className: css}, 
                 React.createElement("a", {onClick: this.props.onClick}, this.props.children)
             )
         );
