@@ -81,6 +81,9 @@ npm test
 ```
 
 ## Changelog
+### v1.1.4
+* Updated to React 15. Thanks to contributors!
+
 ### v1.1.1
 * Updated to React 0.13.
 * Updated local demo. 
