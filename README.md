@@ -3,6 +3,8 @@
 [![Build Status][travis-image]][travis-url]<br />
 [![NPM version][npm-stats]][npm-url]
 
+## TODO
+* Move it all to ES6
 
 ## Getting started
 ### browserify
