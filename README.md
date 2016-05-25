@@ -96,6 +96,8 @@ npm test
 
 ## Contributors
 * [tko](https://github.com/tko)
+* [Plummat](https://github.com/Plummat)
+* [lvhntr](https://github.com/lvhntr)
 
 
 [npm-stats]: https://nodei.co/npm/react-pager.png?compact=true
