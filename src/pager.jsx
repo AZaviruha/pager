@@ -54,14 +54,14 @@ var Pager = React.createClass({
         onPageChanged:         React.PropTypes.func,
         onPageSizeChanged:     React.PropTypes.func
     },
-    
+
 
     /* ========================= HANDLERS =============================*/
     handleFirstPage: function () {
         if ( this.isPrevDisabled() ) return;
         this.handlePageChanged( BASE_SHIFT );
     },
-    
+
     handlePreviousPage: function () {
         if ( this.isPrevDisabled() ) return;
         this.handlePageChanged( this.props.current - TITLE_SHIFT );
@@ -76,7 +76,7 @@ var Pager = React.createClass({
         if ( this.isNextDisabled() ) return;
         this.handlePageChanged( this.props.total - TITLE_SHIFT );
     },
-    
+
     /**
      * Chooses page, that is one before min of currently visible
      * pages.
@@ -99,7 +99,7 @@ var Pager = React.createClass({
         var handler = this.props.onPageChanged;
         if ( handler ) handler( el );
     },
-    
+
 
     /* ========================= HELPERS ==============================*/
     /**
@@ -111,9 +111,9 @@ var Pager = React.createClass({
           , blockSize  = props.visiblePages
           , current    = props.current + TITLE_SHIFT
 
-          , blocks     = Math.ceil( total / blockSize ) 
+          , blocks     = Math.ceil( total / blockSize )
           , currBlock  = Math.ceil( current / blockSize ) - TITLE_SHIFT;
-        
+
         return {
             total:    blocks,
             current:  currBlock,
@@ -131,13 +131,13 @@ var Pager = React.createClass({
 
     isPrevMoreHidden: function () {
         var blocks = this.calcBlocks();
-        return ( blocks.total === TITLE_SHIFT ) 
+        return ( blocks.total === TITLE_SHIFT )
                || ( blocks.current === BASE_SHIFT );
     },
 
     isNextMoreHidden: function () {
         var blocks = this.calcBlocks();
-        return ( blocks.total === TITLE_SHIFT ) 
+        return ( blocks.total === TITLE_SHIFT )
                || ( blocks.current === (blocks.total - TITLE_SHIFT) );
     },
 
@@ -149,12 +149,12 @@ var Pager = React.createClass({
         return [ start + TITLE_SHIFT, end + TITLE_SHIFT ];
     },
 
-    
+
     getTitles: function ( key ) {
         var pTitles = this.props.titles || {};
         return pTitles[ key ] || TITLES[ key ];
     },
-    
+
     /* ========================= RENDERS ==============================*/
     render: function () {
         var titles = this.getTitles;
@@ -162,34 +162,34 @@ var Pager = React.createClass({
         return (
             <nav>
                 <ul className="pagination">
-                    <Page className="btn-first-page"
+                    <Page className="page-item btn-first-page"
                           key="btn-first-page"
-                          isDisabled={this.isPrevDisabled()} 
+                          isDisabled={this.isPrevDisabled()}
                           onClick={this.handleFirstPage}>{titles('first')}</Page>
 
-                    <Page className="btn-prev-page"
+                    <Page className="page-item btn-prev-page"
                           key="btn-prev-page"
-                          isDisabled={this.isPrevDisabled()} 
+                          isDisabled={this.isPrevDisabled()}
                           onClick={this.handlePreviousPage}>{titles('prev')}</Page>
 
-                    <Page className="btn-prev-more"
+                    <Page className="page-item btn-prev-more"
                           key="btn-prev-more"
                           isHidden={this.isPrevMoreHidden()}
                           onClick={this.handleMorePrevPages}>{titles('prevSet')}</Page>
 
                     {this.renderPages( this.visibleRange() )}
 
-                    <Page className="btn-next-more"
+                    <Page className="page-item btn-next-more"
                           key="btn-next-more"
                           isHidden={this.isNextMoreHidden()}
                           onClick={this.handleMoreNextPages}>{titles('nextSet')}</Page>
 
-                    <Page className="btn-next-page"
+                    <Page className="page-item btn-next-page"
                           key="btn-next-page"
                           isDisabled={this.isNextDisabled()}
                           onClick={this.handleNextPage}>{titles('next')}</Page>
 
-                    <Page className="btn-last-page"
+                    <Page className="page-item btn-last-page"
                           key="btn-last-page"
                           isDisabled={this.isNextDisabled()}
                           onClick={this.handleLastPage}>{titles('last')}</Page>
@@ -207,14 +207,14 @@ var Pager = React.createClass({
      */
     renderPages: function ( pair ) {
         var self = this;
-        
+
         return range( pair[0], pair[1] ).map(function ( el, idx ) {
             var current = el - TITLE_SHIFT
               , onClick = self.handlePageChanged.bind(null, current)
               , isActive = (self.props.current === current);
 
             return (<Page key={idx} index={idx} isActive={isActive}
-                          className="btn-numbered-page"
+                          className="page-item btn-numbered-page"
                           onClick={onClick}>{el}</Page>);
         });
     }
@@ -234,11 +234,11 @@ var Page = React.createClass({
 
         return (
             <li key={this.props.index} className={css}>
-                <a onClick={this.props.onClick}>{this.props.children}</a>
+                <a className="page-link" onClick={this.props.onClick}>{this.props.children}</a>
             </li>
         );
     }
-});    
+});
 
 
 
@@ -248,7 +248,7 @@ function range ( start, end ) {
         res.push( i );
     }
 
-    return res; 
+    return res;
 }
 
 module.exports = Pager;
