@@ -29,15 +29,15 @@ var PagerDemo = React.createClass({
             visiblePages: 3
         };
     },
-    
+
     handlePageChanged: function ( newPage ) {
         this.setState({ current : newPage });
     },
-    
+
     render: function() {
         return (<Pager total={this.state.total}
                        current={this.state.current}
-                       
+
                        {/* Optional */}
                        titles={{
                            first:   'First',
@@ -47,7 +47,7 @@ var PagerDemo = React.createClass({
                            next:    '\u00BB',
                            last:    'Last'
                        }}
-                       
+
                        visiblePages={this.state.visiblePages}
                        onPageChanged={this.handlePageChanged}/>);
     }
@@ -67,7 +67,7 @@ First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
 
 ## Demo
 ```shell
-gulp demo -p 8003 
+gulp demo -p 8003
 ```
 or
 ```shell
@@ -83,12 +83,16 @@ npm test
 ```
 
 ## Changelog
+
+### v1.2.0
+* Added `page-item` and `page-link` classes for Bootstrap 4.
+
 ### v1.1.4
 * Updated to React 15. Thanks to contributors!
 
 ### v1.1.1
 * Updated to React 0.13.
-* Updated local demo. 
+* Updated local demo.
 
 ### v1.1.0
 * Added `titles` property. See [demo](http://jsfiddle.net/azaviruha/kb3gN/10213/).
