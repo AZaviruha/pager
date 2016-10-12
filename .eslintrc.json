@@ -7,6 +7,7 @@
 		"no-multi-spaces": "off",
 		"key-spacing": "off",
 		"no-plusplus": "off",
+		"no-use-before-define": "off",
 		"react/jsx-indent": [2, "tab"],
 		"react/jsx-indent-props": [2, "tab"]
     }

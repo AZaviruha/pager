@@ -30,7 +30,7 @@ import React from 'react';
 /**
  * ## Constants
  */
-const BASE_SHIFT = 0;
+const BASE_SHIFT  = 0;
 const TITLE_SHIFT = 1;
 
 const TITLES = {
@@ -46,21 +46,23 @@ const TITLES = {
 /**
  * ## Constructor
  */
-const Pager = React.createClass({
-	propTypes: {
-		current:               React.PropTypes.number.isRequired,
-		total:                 React.PropTypes.number.isRequired,
-		visiblePages:          React.PropTypes.number.isRequired,
-		titles:                React.PropTypes.object,
+class Pager extends React.Component {
+	constructor(props) {
+		super(props);
 
-		onPageChanged:         React.PropTypes.func,
-		onPageSizeChanged:     React.PropTypes.func,
-	},
+		this.handleFirstPage     = this.handleFirstPage.bind(this);
+		this.handlePreviousPage  = this.handlePreviousPage.bind(this);
+		this.handleNextPage      = this.handleNextPage.bind(this);
+		this.handleLastPage      = this.handleLastPage.bind(this);
+		this.handleMorePrevPages = this.handleMorePrevPages.bind(this);
+		this.handleMoreNextPages = this.handleMoreNextPages.bind(this);
+		this.handlePageChanged   = this.handlePageChanged.bind(this);
+	}
 
     /* ========================= HELPERS ==============================*/
 	getTitles(key) {
 		return (this.props.titles || TITLES)[key];
-	},
+	}
 
     /**
      * Calculates "blocks" of buttons with page numbers.
@@ -78,25 +80,25 @@ const Pager = React.createClass({
 			current:  currBlock,
 			size:     blockSize,
 		};
-	},
+	}
 
 	isPrevDisabled() {
 		return this.props.current <= BASE_SHIFT;
-	},
+	}
 
 	isNextDisabled() {
 		return this.props.current >= (this.props.total - TITLE_SHIFT);
-	},
+	}
 
 	isPrevMoreHidden() {
 		const blocks = this.calcBlocks();
 		return (blocks.total === TITLE_SHIFT) || (blocks.current === BASE_SHIFT);
-	},
+	}
 
 	isNextMoreHidden() {
 		const blocks = this.calcBlocks();
 		return (blocks.total === TITLE_SHIFT) || (blocks.current === (blocks.total - TITLE_SHIFT));
-	},
+	}
 
 	visibleRange() {
 		const blocks = this.calcBlocks();
@@ -105,7 +107,7 @@ const Pager = React.createClass({
 		const end = start + ((delta > blocks.size) ? blocks.size : delta);
 
 		return [start + TITLE_SHIFT, end + TITLE_SHIFT];
-	},
+	}
 
 
     /* ========================= HANDLERS =============================*/
@@ -113,25 +115,25 @@ const Pager = React.createClass({
 		if (!this.isPrevDisabled()) {
 			this.handlePageChanged(BASE_SHIFT);
 		}
-	},
+	}
 
 	handlePreviousPage() {
 		if (!this.isPrevDisabled()) {
 			this.handlePageChanged(this.props.current - TITLE_SHIFT);
 		}
-	},
+	}
 
 	handleNextPage() {
 		if (!this.isNextDisabled()) {
 			this.handlePageChanged(this.props.current + TITLE_SHIFT);
 		}
-	},
+	}
 
 	handleLastPage() {
 		if (!this.isNextDisabled()) {
 			this.handlePageChanged(this.props.total - TITLE_SHIFT);
 		}
-	},
+	}
 
     /**
      * Chooses page, that is one before min of currently visible
@@ -140,7 +142,7 @@ const Pager = React.createClass({
 	handleMorePrevPages() {
 		const blocks = this.calcBlocks();
 		this.handlePageChanged((blocks.current * blocks.size) - TITLE_SHIFT);
-	},
+	}
 
     /**
      * Chooses page, that is one after max of currently visible
@@ -149,12 +151,12 @@ const Pager = React.createClass({
 	handleMoreNextPages() {
 		const blocks = this.calcBlocks();
 		this.handlePageChanged((blocks.current + TITLE_SHIFT) * blocks.size);
-	},
+	}
 
 	handlePageChanged(el) {
 		const handler = this.props.onPageChanged;
 		if (handler) handler(el);
-	},
+	}
 
 
     /* ========================= RENDERS ==============================*/
@@ -179,7 +181,7 @@ const Pager = React.createClass({
 				>{el}</Page>
 			);
 		});
-	},
+	}
 
 
 	render() {
@@ -234,28 +236,40 @@ const Pager = React.createClass({
 				</ul>
 			</nav>
 		);
-	},
-});
+	}
+}
 
 
-const Page = React.createClass({
-	render() {
-		const props = this.props;
+Pager.propTypes = {
+	current:           React.PropTypes.number.isRequired,
+	total:             React.PropTypes.number.isRequired,
+	visiblePages:      React.PropTypes.number.isRequired,
+	titles:            React.PropTypes.object,
+	onPageChanged:     React.PropTypes.func,
+};
 
-		if (props.isHidden) return null;
 
-		const baseCss = props.className ? `${props.className} ` : '';
-		const css = baseCss
-						+ (props.isActive ? 'active' : '')
-						+ (props.isDisabled ? ' disabled' : '');
+const Page = (props) => {
+	if (props.isHidden) return null;
 
-		return (
-			<li key={this.props.index} className={css}>
-				<a onClick={this.props.onClick}>{this.props.children}</a>
-			</li>
-		);
-	},
-});
+	const baseCss = props.className ? `${props.className} ` : '';
+	const css = baseCss
+					+ (props.isActive ? 'active' : '')
+					+ (props.isDisabled ? ' disabled' : '');
+
+	return (
+		<li key={this.props.index} className={css}>
+			<a onClick={this.props.onClick}>{this.props.children}</a>
+		</li>
+	);
+};
+
+Page.propTypes = {
+	isHidden:   React.PropTypes.boolean,
+	isActive:   React.PropTypes.boolean,
+	isDisabled: React.PropTypes.boolean,
+	className:  React.PropTypes.string,
+};
 
 
 function range(start, end) {
