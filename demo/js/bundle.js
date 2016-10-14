@@ -1,9 +1,9 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
-		define(['exports', 'react', '../../../../src/pager.jsx'], factory);
+		define(['exports', 'react', '../../../src/pager.jsx'], factory);
 	} else if (typeof exports !== "undefined") {
-		factory(exports, require('react'), require('../../../../src/pager.jsx'));
+		factory(exports, require('react'), require('../../../src/pager.jsx'));
 	} else {
 		var mod = {
 			exports: {}
@@ -118,7 +118,7 @@
 	exports.default = App;
 });
 
-},{"../../../../src/pager.jsx":174,"react":173}],2:[function(require,module,exports){
+},{"../../../src/pager.jsx":174,"react":173}],2:[function(require,module,exports){
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
 		define(['react', 'react-dom', './components/app.jsx'], factory);

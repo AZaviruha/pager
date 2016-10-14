@@ -12,7 +12,7 @@ const buffer     = require('vinyl-buffer');
 const PATH = {
 	src  : 'src/',
 	dest : 'dist/',
-	demo : 'demo/client/js/',
+	demo : 'demo/js/',
 	spec : 'spec/component/',
 };
 
@@ -63,7 +63,7 @@ gulp.task('run-demo', ['build-demo'], (done) => {
 	const PORT = args.p || args.port || 8001;
 	const app = express();
 
-	app.use(express.static('./demo/client/'));
+	app.use(express.static('./demo/'));
 
 	app.listen(PORT, () => {
 		console.log('Server started at port ', PORT);

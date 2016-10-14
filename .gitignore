@@ -1,2 +1,3 @@
 node_modules/
 spec/bundle.spec.js
+npm-debug.log

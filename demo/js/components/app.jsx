@@ -1,5 +1,5 @@
 import React from 'react';
-import Pager from '../../../../src/pager.jsx';
+import Pager from '../../../src/pager.jsx';
 
 class App extends React.Component {
 	constructor(props) {
