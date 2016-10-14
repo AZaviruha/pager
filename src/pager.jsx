@@ -61,7 +61,7 @@ class Pager extends React.Component {
 
     /* ========================= HELPERS ==============================*/
 	getTitles(key) {
-		return (this.props.titles && this.props.titles[key]) || TITLES[key];
+		return this.props.titles[key] || TITLES[key];
 	}
 
     /**
@@ -175,7 +175,8 @@ class Pager extends React.Component {
 			return (
 				<Page
 					key={idx}
-					index={idx} isActive={isActive}
+					index={idx}
+					isActive={isActive}
 					className="btn-numbered-page"
 					onClick={onClick}
 				>{num}</Page>
@@ -247,15 +248,19 @@ Pager.propTypes = {
 	onPageChanged:     React.PropTypes.func,
 };
 
+Pager.defaultProps = {
+	titles: TITLES,
+};
+
 
 const Page = (props) => {
 	if (props.isHidden) return null;
 
 	const baseCss = props.className ? `${props.className} ` : '';
-	const css     = `${baseCss}${props.isActive ? ' active' : ''}${props.isDisabled ? ' disabled' : ''}`;
+	const fullCss = `${baseCss}${props.isActive ? ' active' : ''}${props.isDisabled ? ' disabled' : ''}`;
 
 	return (
-		<li key={props.index} className={css}>
+		<li key={props.index} className={fullCss}>
 			<a onClick={props.onClick}>{props.children}</a>
 		</li>
 	);
@@ -266,6 +271,7 @@ Page.propTypes = {
 	isActive:   React.PropTypes.bool,
 	isDisabled: React.PropTypes.bool,
 	className:  React.PropTypes.string,
+	onClick:    React.PropTypes.func,
 };
 
 
