@@ -21028,7 +21028,7 @@ module.exports = require('./lib/React');
 		_createClass(Pager, [{
 			key: 'getTitles',
 			value: function getTitles(key) {
-				return this.props.titles && this.props.titles[key] || TITLES[key];
+				return this.props.titles[key] || TITLES[key];
 			}
 		}, {
 			key: 'calcBlocks',
@@ -21138,7 +21138,8 @@ module.exports = require('./lib/React');
 						Page,
 						{
 							key: idx,
-							index: idx, isActive: isActive,
+							index: idx,
+							isActive: isActive,
 							className: 'btn-numbered-page',
 							onClick: onClick
 						},
@@ -21234,15 +21235,19 @@ module.exports = require('./lib/React');
 		onPageChanged: _react2.default.PropTypes.func
 	};
 
+	Pager.defaultProps = {
+		titles: TITLES
+	};
+
 	var Page = function Page(props) {
 		if (props.isHidden) return null;
 
 		var baseCss = props.className ? props.className + ' ' : '';
-		var css = '' + baseCss + (props.isActive ? ' active' : '') + (props.isDisabled ? ' disabled' : '');
+		var fullCss = '' + baseCss + (props.isActive ? ' active' : '') + (props.isDisabled ? ' disabled' : '');
 
 		return _react2.default.createElement(
 			'li',
-			{ key: props.index, className: css },
+			{ key: props.index, className: fullCss },
 			_react2.default.createElement(
 				'a',
 				{ onClick: props.onClick },
@@ -21255,7 +21260,8 @@ module.exports = require('./lib/React');
 		isHidden: _react2.default.PropTypes.bool,
 		isActive: _react2.default.PropTypes.bool,
 		isDisabled: _react2.default.PropTypes.bool,
-		className: _react2.default.PropTypes.string
+		className: _react2.default.PropTypes.string,
+		onClick: _react2.default.PropTypes.func
 	};
 
 	function range(start, end) {
