@@ -153,9 +153,9 @@ class Pager extends React.Component {
 		this.handlePageChanged((blocks.current + TITLE_SHIFT) * blocks.size);
 	}
 
-	handlePageChanged(el) {
+	handlePageChanged(num) {
 		const handler = this.props.onPageChanged;
-		if (handler) handler(el);
+		if (handler) handler(num);
 	}
 
 
@@ -167,9 +167,9 @@ class Pager extends React.Component {
      * @return {React.Element[]} - array of React nodes.
      */
 	renderPages(pair) {
-		return range(pair[0], pair[1]).map((el, idx) => {
-			const current = el - TITLE_SHIFT;
-			const onClick = this.handlePageChanged.bind(null, current);
+		return range(pair[0], pair[1]).map((num, idx) => {
+			const current = num - TITLE_SHIFT;
+			const onClick = this.handlePageChanged.bind(this, current);
 			const isActive = (this.props.current === current);
 
 			return (
@@ -178,14 +178,14 @@ class Pager extends React.Component {
 					index={idx} isActive={isActive}
 					className="btn-numbered-page"
 					onClick={onClick}
-				>{el}</Page>
+				>{num}</Page>
 			);
 		});
 	}
 
 
 	render() {
-		const titles = this.getTitles;
+		const titles = this.getTitles.bind(this);
 
 		return (
 			<nav>
@@ -239,7 +239,6 @@ class Pager extends React.Component {
 	}
 }
 
-
 Pager.propTypes = {
 	current:           React.PropTypes.number.isRequired,
 	total:             React.PropTypes.number.isRequired,
@@ -253,13 +252,11 @@ const Page = (props) => {
 	if (props.isHidden) return null;
 
 	const baseCss = props.className ? `${props.className} ` : '';
-	const css = baseCss
-					+ (props.isActive ? 'active' : '')
-					+ (props.isDisabled ? ' disabled' : '');
+	const css     = `${baseCss}${props.isActive ? ' active' : ''}${props.isDisabled ? ' disabled' : ''}`;
 
 	return (
-		<li key={this.props.index} className={css}>
-			<a onClick={this.props.onClick}>{this.props.children}</a>
+		<li key={props.index} className={css}>
+			<a onClick={props.onClick}>{props.children}</a>
 		</li>
 	);
 };

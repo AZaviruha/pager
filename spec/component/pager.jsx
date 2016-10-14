@@ -1,195 +1,218 @@
-/** @jsx React.DOM */
-// For PhantomJS. 
-// See https://github.com/facebook/react/pull/347#issuecomment-24625365
-require( 'es5-shim' );
+/* global describe: true */
+/* global it: true */
+/* global expect: true */
 
-var React      = require( 'react' )
-  , TestUtils  = require( 'react-addons-test-utils' )
-  , byTag      = TestUtils.findRenderedDOMComponentWithTag 
-  , byClass    = TestUtils.findRenderedDOMComponentWithClass 
-  , byClassAll = TestUtils.scryRenderedDOMComponentsWithClass 
-  , Pager      = require( '../../dist/pager' );
-
-describe( "react-pager component", function () {
-    
-    it( "should create set of numbered buttons whose length equals to `visiblePages` property", function () {
-        var pager         = generatePager( 5, 20, 7 )
-          , numberedPages = byClassAll( pager, 'btn-numbered-page' ).length;
-        expect( numberedPages ).toEqual( 7 );
-
-        pager         = generatePager( 5, 20, 10 );
-        numberedPages = byClassAll( pager, 'btn-numbered-page' ).length;
-        expect( numberedPages ).toEqual( 10 );
-
-        pager         = generatePager( 5, 20, 0 );
-        numberedPages = byClassAll( pager, 'btn-numbered-page' ).length;
-        expect( numberedPages ).toEqual( 0 );
-    });
+import React from 'react';
+import { shallow, mount } from 'enzyme';
+import Pager from '../../src/pager.jsx';
 
 
-    it( "should disable `fistPage` button if `current` equals to `0`", function () {
-        var pager       = generatePager( 0, 20, 5 )
-          , btnPrevPage = byClass( pager, 'btn-first-page' );
-        expect( btnPrevPage.props.className ).toContain( 'disabled' );
+describe('react-pager component', () => {
+	it('should create set of numbered buttons whose length equals to `visiblePages` property', () => {
+		let pager         = generatePager(5, 20, 7);
+		let numberedPages = pager.find('.btn-numbered-page').length;
 
-        pager       = generatePager( 1, 20, 5 );
-        btnPrevPage = byClass( pager, 'btn-first-page' );
-        expect( btnPrevPage.props.className ).not.toContain( 'disabled' );
-    });
+		expect(numberedPages).toEqual(7);
 
+		pager         = generatePager(5, 20, 10);
+		numberedPages = pager.find('.btn-numbered-page').length;
 
-    it( "should disable `prevPage` button if `current` equals to `0`", function () {
-        var pager       = generatePager( 0, 20, 5 )
-          , btnPrevPage = byClass( pager, 'btn-prev-page' );
-        expect( btnPrevPage.props.className ).toContain( 'disabled' );
+		expect(numberedPages).toEqual(10);
 
-        pager       = generatePager( 1, 20, 5 );
-        btnPrevPage = byClass( pager, 'btn-prev-page' );
-        expect( btnPrevPage.props.className ).not.toContain( 'disabled' );
-    });
-    
+		pager         = generatePager(5, 20, 0);
+		numberedPages = pager.find('.btn-numbered-page').length;
 
-    it( "should disable `nextPage` button if `current` equals to `total-1`", function () {
-        var pager       = generatePager( 19, 20, 5 )
-          , btnPrevPage = byClass( pager, 'btn-next-page' );
-        expect( btnPrevPage.props.className ).toContain( 'disabled' );
-
-        pager       = generatePager( 18, 20, 5 );
-        btnPrevPage = byClass( pager, 'btn-next-page' );
-        expect( btnPrevPage.props.className ).not.toContain( 'disabled' );
-    });
-    
-
-    it( "should disable `lastPage` button if `current` equals to `total-1`", function () {
-        var pager       = generatePager( 19, 20, 5 )
-          , btnPrevPage = byClass( pager, 'btn-last-page' );
-        expect( btnPrevPage.props.className ).toContain( 'disabled' );
-
-        pager       = generatePager( 18, 20, 5 );
-        btnPrevPage = byClass( pager, 'btn-last-page' );
-        expect( btnPrevPage.props.className ).not.toContain( 'disabled' );
-    });
-    
-
-    it( "should increment active button number after click on `nextPage` button", function () {
-        var pager         = generatePager( 3, 20, 5, handler )
-          , btnNextPage   = byClass( pager, 'btn-next-page' )
-          , numberedPages = byClassAll( pager, 'btn-numbered-page' );
-        expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
-        
-        TestUtils.Simulate.click( btnNextPage );
-        function handler ( next ) { expect( next ).toEqual( 4 ); }
-    });
-    
-
-    it( "should decrement active button number after click on `prevPage` button", function () {
-        var pager         = generatePager( 3, 20, 5, handler )
-          , btnPrevPage   = byClass( pager, 'btn-prev-page' )
-          , numberedPages = byClassAll( pager, 'btn-numbered-page' );
-        expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
-        
-        TestUtils.Simulate.click( btnPrevPage );
-        function handler ( next ) { expect( next ).toEqual( 2 ); }
-    });
+		expect(numberedPages).toEqual(0);
+	});
 
 
-    it( "should return `0` after click on `firstPage` button", function () {
-        var pager         = generatePager( 3, 20, 5, handler )
-          , btnFirstPage   = byClass( pager, 'btn-first-page' )
-          , numberedPages = byClassAll( pager, 'btn-numbered-page' );
-        expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
-        
-        TestUtils.Simulate.click( btnFirstPage );
-        function handler ( next ) { expect( next ).toEqual( 0 ); }
-    });
+	it('should disable `fistPage` button if `current` equals to `0`', () => {
+		let pager       = generatePager(0, 20, 5);
+		let btnFirstPage = pager.find('.btn-first-page').first();
+
+		expect(btnFirstPage.hasClass('disabled')).toBe(true);
+
+		pager       = generatePager(1, 20, 5);
+		btnFirstPage = pager.find('.btn-first-page').first();
+
+		expect(btnFirstPage.hasClass('disabled')).toBe(false);
+	});
 
 
-    it( "should return `total-1` after click on `lastPage` button", function () {
-        var pager         = generatePager( 3, 20, 5, handler )
-          , btnLastPage   = byClass( pager, 'btn-last-page' )
-          , numberedPages = byClassAll( pager, 'btn-numbered-page' );
-        expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
-        
-        TestUtils.Simulate.click( btnLastPage );
-        function handler ( next ) { expect( next ).toEqual( 19 ); }
-    });
+	it('should disable `prevPage` button if `current` equals to `0`', () => {
+		let pager       = generatePager(0, 20, 5);
+		let btnPrevPage = pager.find('.btn-prev-page').first();
 
-    function generatePager ( c, t, v, f ) {
-        return TestUtils.renderIntoDocument(
-            <Pager current={c}
-                   total={t}
-                   visiblePages={v}
-                   onPageChanged={f} />
-        );
-    }
-    
-    
-    it( "should return `total-1` after click on `lastPage` button", function () {
-        var pager         = generatePager( 3, 20, 5, handler )
-          , btnLastPage   = byClass( pager, 'btn-last-page' )
-          , numberedPages = byClassAll( pager, 'btn-numbered-page' );
-        expect( nth( numberedPages, 'active' ) ).toEqual( 3 );
-        
-        TestUtils.Simulate.click( btnLastPage );
-        function handler ( next ) { expect( next ).toEqual( 19 ); }
-    });
-    
+		expect(btnPrevPage.hasClass('disabled')).toBe(true);
 
-    it( "should render labels for buttons according to `titles` prop", function () {
-        var titles = {
-            first:   '|<',
-            prev:    '<',
-            prevSet: '<#',
-            nextSet: '#>',
-            next:    '>',
-            last:    '>|'
-        };
+		pager       = generatePager(1, 20, 5);
+		btnPrevPage = pager.find('.btn-prev-page').first();
 
-        var pager = TestUtils.renderIntoDocument(
-            <Pager current={3}
-                   total={20}
-                   visiblePages={5}
-                   titles={titles} />);
+		expect(btnPrevPage.hasClass('disabled')).toBe(false);
+	});
 
 
-        var btnFirstPage  = byClass( pager, 'btn-first-page' )
-          , btnPrevPage   = byClass( pager, 'btn-prev-page' )
-          //, btnPrevSet    = byClass( pager, 'btn-prev-more' )
-          , btnNextPage   = byClass( pager, 'btn-next-page' )
-          , btnNextSet    = byClass( pager, 'btn-next-more' )
-          , btnLastPage   = byClass( pager, 'btn-last-page' );
+	it('should disable `nextPage` button if `current` equals to `total-1`', () => {
+		let pager       = generatePager(19, 20, 5);
+		let btnNextPage = pager.find('.btn-next-page').first();
 
-        expect( btnFirstPage.getDOMNode().textContent ).toEqual( titles.first );
-        expect( btnPrevPage.getDOMNode().textContent ).toEqual( titles.prev );
-        expect( btnNextSet.getDOMNode().textContent ).toEqual( titles.nextSet );
-        expect( btnNextPage.getDOMNode().textContent ).toEqual( titles.next );
-        expect( btnLastPage.getDOMNode().textContent ).toEqual( titles.last );
-    });
+		expect(btnNextPage.hasClass('disabled')).toBe(true);
+
+		pager       = generatePager(18, 20, 5);
+		btnNextPage = pager.find('.btn-next-page').first();
+
+		expect(btnNextPage.hasClass('disabled')).toBe(false);
+	});
 
 
-    function generatePager ( c, t, v, f ) {
-        return TestUtils.renderIntoDocument(
-            <Pager current={c}
-                   total={t}
-                   visiblePages={v}
-                   onPageChanged={f} />
-        );
-    }
+	it('should disable `lastPage` button if `current` equals to `total-1`', () => {
+		let pager       = generatePager(19, 20, 5);
+		let btnLastPage = pager.find('.btn-last-page').first();
+
+		expect(btnLastPage.hasClass('disabled')).toBe(true);
+
+		pager       = generatePager(18, 20, 5);
+		btnLastPage = pager.find('.btn-last-page').first();
+
+		expect(btnLastPage.hasClass('disabled')).toBe(false);
+	});
 
 
-    function nth ( comps, css ) {
-        var res = -1
-          , className;
+	it('should increment active button number after click on `nextPage` button', (done) => {
+		let pager         = generatePager(3, 20, 5);
+		const numberedPages = pager.find('.btn-numbered-page');
 
-        for ( var i = 0, len = comps.length; i < len; i++ ) {
-            className = comps[ i ].props.className;
-            if ( typeof className === 'string' )
-                if ( className.indexOf( css ) === -1 )
-                    res += 1;
-                else 
-                    return res + 1;
-        }
-        
-        return res;
-    }
+		expect(nth(numberedPages, 'active')).toEqual(3);
+
+		function handler(next) {
+			expect(next).toEqual(4);
+			done();
+		}
+
+		pager             = generatePager(3, 20, 5, handler);
+		const btnNextPage = pager.find('.btn-next-page').first();
+
+		btnNextPage.simulate('click');
+	});
+
+
+	it('should decrement active button number after click on `prevPage` button', (done) => {
+		let pager           = generatePager(3, 20, 5);
+		const numberedPages = pager.find('.btn-numbered-page');
+
+		expect(nth(numberedPages, 'active')).toEqual(3);
+
+		function handler(next) {
+			expect(next).toEqual(2);
+			done();
+		}
+
+		pager             = generatePager(3, 20, 5, handler);
+		const btnPrevPage = pager.find('.btn-prev-page');
+
+		btnPrevPage.simulate('click');
+	});
+
+
+	it('should return `0` after click on `firstPage` button', (done) => {
+		let pager           = generatePager(3, 20, 5);
+		const numberedPages = pager.find('.btn-numbered-page');
+
+		expect(nth(numberedPages, 'active')).toEqual(3);
+
+
+		pager              = generatePager(3, 20, 5, handler);
+		const btnFirstPage = pager.find('.btn-first-page').first();
+
+		function handler(next) {
+			expect(next).toEqual(0);
+			done();
+		}
+
+		btnFirstPage.simulate('click');
+	});
+
+
+	it('should return `total-1` after click on `lastPage` button', (done) => {
+		let pager           = generatePager(3, 20, 5);
+		const numberedPages = pager.find('.btn-numbered-page');
+
+		expect(nth(numberedPages, 'active')).toEqual(3);
+
+		pager             = generatePager(3, 20, 5, handler);
+		const btnLastPage = pager.find('.btn-last-page').first();
+
+		function handler(next) {
+			expect(next).toEqual(19);
+			done();
+		}
+
+		btnLastPage.simulate('click');
+	});
+
+
+	it('should render labels for buttons according to `titles` prop', () => {
+		const titles = {
+			first:   '|<',
+			prev:    '<',
+			prevSet: '<#',
+			nextSet: '#>',
+			next:    '>',
+			last:    '>|',
+		};
+
+		const pager = mount(
+			<Pager
+				current={10}
+				total={20}
+				visiblePages={5}
+				titles={titles}
+			/>
+		);
+
+		const btnFirstPage = pager.find('.btn-first-page').first();
+		const btnPrevPage  = pager.find('.btn-prev-page').first();
+		const btnPrevSet   = pager.find('.btn-prev-more').first();
+		const btnNextPage  = pager.find('.btn-next-page').first();
+		const btnNextSet   = pager.find('.btn-next-more').first();
+		const btnLastPage  = pager.find('.btn-last-page').first();
+
+		expect(btnFirstPage.find('a').first().text()).toEqual(titles.first);
+		expect(btnPrevPage.find('a').first().text()).toEqual(titles.prev);
+		expect(btnPrevSet.find('a').first().text()).toEqual(titles.prevSet);
+		expect(btnNextSet.find('a').first().text()).toEqual(titles.nextSet);
+		expect(btnNextPage.find('a').first().text()).toEqual(titles.next);
+		expect(btnLastPage.find('a').first().text()).toEqual(titles.last);
+	});
 });
+
+
+function generatePager(c, t, v, fn) {
+	/**
+	 * `render` is needed because of combinations of these issues:
+	 * https://github.com/airbnb/enzyme/issues/134 (so we need `mount` to use `.hasClass()`);
+	 * https://github.com/airbnb/enzyme/issues/308#issuecomment-215348290 (so
+	 *   we need `shallow` to use `.simulate()`)
+	 */
+	const render = fn ? shallow : mount;
+
+	return render(
+		<Pager
+			current={c}
+			total={t}
+			visiblePages={v}
+			onPageChanged={fn}
+		/>
+	);
+}
+
+
+function nth(comps, className) {
+	let res = -1;
+
+	comps.forEach((node, idx) => {
+		if (node.hasClass(className)) res = idx;
+	});
+
+	return res;
+}
