@@ -61,7 +61,7 @@ class Pager extends React.Component {
 
     /* ========================= HELPERS ==============================*/
 	getTitles(key) {
-		return (this.props.titles || TITLES)[key];
+		return (this.props.titles && this.props.titles[key]) || TITLES[key];
 	}
 
     /**
@@ -262,9 +262,9 @@ const Page = (props) => {
 };
 
 Page.propTypes = {
-	isHidden:   React.PropTypes.boolean,
-	isActive:   React.PropTypes.boolean,
-	isDisabled: React.PropTypes.boolean,
+	isHidden:   React.PropTypes.bool,
+	isActive:   React.PropTypes.bool,
+	isDisabled: React.PropTypes.bool,
 	className:  React.PropTypes.string,
 };
 

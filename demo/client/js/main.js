@@ -1,9 +1,10 @@
-/** @jsx React.DOM */
+/* global window = true */
+/* global document = true */
 
-var $      = require( 'jquery' )
-  , React  = require( 'react' )
-  , App    = require( './components/compiled/app' );
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/app.jsx';
 
-$(function () {
-    React.render( <App />, document.body );
-});
+window.onload = () => {
+	ReactDOM.render(React.createElement(App), document.querySelector('#app'));
+};

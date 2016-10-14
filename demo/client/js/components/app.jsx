@@ -1,30 +1,34 @@
-/** @jsx React.DOM */
+import React from 'react';
+import Pager from '../../../../src/pager.jsx';
 
-var React = require( 'react' )
-/* , RB    = require( 'react-bootstrap' ) */
-  , Pager = require( '../../../../../dist/pager' );
+class App extends React.Component {
+	constructor(props) {
+		super(props);
 
-var App = React.createClass({
-    getInitialState: function () {
-        return {
-            total:       11,
-            current:     7,
-            visiblePage: 3
-        };
-    },
-    
-    handlePageChanged: function ( newPage ) {
-        this.setState({ current : newPage });
-    },
-    
-    render: function() {
-        return (<Pager total={this.state.total}
-                       current={this.state.current}
-                       visiblePages={this.state.visiblePage}
-                       titles={{first: '<|', last: '>|'}}
-                       onPageChanged={this.handlePageChanged}/>);
-    }
-});
+		this.handlePageChanged = this.handlePageChanged.bind(this);
 
+		this.state = {
+			total:       11,
+			current:     7,
+			visiblePage: 3,
+		};
+	}
 
-module.exports = App;
+	handlePageChanged(newPage) {
+		this.setState({ current : newPage });
+	}
+
+	render() {
+		return (
+			<Pager
+				total={this.state.total}
+				current={this.state.current}
+				visiblePages={this.state.visiblePage}
+				titles={{ first: '<|', last: '>|' }}
+				onPageChanged={this.handlePageChanged}
+			/>
+		);
+	}
+}
+
+export default App;
