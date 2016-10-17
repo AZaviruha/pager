@@ -1,4 +1,4 @@
-# Stateless Pager component (Twitter Bootstrap CSS)
+# Stateless Pager component
 [![Code Climate][cc-image]][cc-url]
 [![Build Status][travis-image]][travis-url]<br />
 [![NPM version][npm-stats]][npm-url]
@@ -6,24 +6,10 @@
 
 ## Getting started
 
-### ES6
-
-```sh
-import Pager from 'react-pager';
-```
-
-### Global scripts
-
-`dist/pager.js` is prebuilded for using in global `<script>` tag.
-(It's used in JSFiddle demo).
-
-
-## Example
-
 ```
 import React from 'react';
 import { render } from 'react-dom';
-import Pager from '../../dist/pager.js';
+import Pager from 'react-pager';
 
 class App extends React.Component {
 	constructor(props) {
@@ -72,15 +58,15 @@ window.onload = () => {
 
 Just open demo/inde.html in your browser.
 
-[JSFiddle](http://jsfiddle.net/azaviruha/69z2wepo/4060/)
-
 
 ## Tests
+
 ```sh
 npm test
 ```
 
 ## Changelog
+
 ### v1.2.0
 * Rewrited all to ES6.
 * Switched from gulp + browserify to webpack.
