@@ -56,7 +56,7 @@ window.onload = () => {
 
 ## Demo
 
-Just open demo/inde.html in your browser.
+Just open [demo/index.html](./demo/index.html) in your browser.
 
 
 ## Tests
