@@ -1,14 +1,11 @@
 var path = require('path');
 var webpack = require('webpack');
 
-var ignore = new webpack.IgnorePlugin(/^(react)$/);
-
 var uglify = new webpack.optimize.UglifyJsPlugin({
 	compress: {
 		warnings: false
 	}	
 });
-
 
 
 module.exports = {
@@ -35,8 +32,5 @@ module.exports = {
 		],
 	},
 
-	plugins: [
-		// ignore, 
-		uglify,
-	]
+	plugins: [uglify]
 };
