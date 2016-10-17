@@ -56,7 +56,9 @@ window.onload = () => {
 
 ## Demo
 
-Just open [demo/index.html](./demo/index.html) in your browser.
+Just open `demo/index.html` in your browser.
+Or see interactive demo [here](http://azaviruha.github.io/demo/react-pager/).
+
 
 
 ## Tests
