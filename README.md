@@ -6,7 +6,7 @@
 
 ## Getting started
 
-```
+```javascript
 import React from 'react';
 import { render } from 'react-dom';
 import Pager from 'react-pager';
