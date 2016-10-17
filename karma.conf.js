@@ -1,6 +1,6 @@
 var path = require('path');
 
-module.exports = (config) => {
+module.exports = function (config) {
 	config.set({
 		basePath:    './',
 
