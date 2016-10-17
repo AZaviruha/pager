@@ -1,78 +1,76 @@
-# Stateless Pager component
+# Stateless Pager component (Twitter Bootstrap CSS)
 [![Code Climate][cc-image]][cc-url]
 [![Build Status][travis-image]][travis-url]<br />
 [![NPM version][npm-stats]][npm-url]
 
-## TODO
-* Move it all to ES6
 
 ## Getting started
-### browserify
+
+### ES6
+
 ```sh
-var Pager = require( 'react-pager' );
+import Pager from 'react-pager';
 ```
 
 ### Global scripts
+
 dist/pager.min.js is prebuilded for using in global `<script>` tag.
 (It's used in JSFiddle demo).
 
 
-## Usage
+## Example
+
 ```
-var Pager = require( 'react-pager' );
+import React from 'react';
+import { render } from 'react-dom';
+import Pager from '../../dist/pager.js';
 
-var PagerDemo = React.createClass({
-    getInitialState: function () {
-        return {
-            total:        11,
-            current:      7,
-            visiblePages: 3
-        };
-    },
-    
-    handlePageChanged: function ( newPage ) {
-        this.setState({ current : newPage });
-    },
-    
-    render: function() {
-        return (<Pager total={this.state.total}
-                       current={this.state.current}
-                       
-                       {/* Optional */}
-                       titles={{
-                           first:   'First',
-                           prev:    '\u00AB',
-                           prevSet: '...',
-                           nextSet: '...',
-                           next:    '\u00BB',
-                           last:    'Last'
-                       }}
-                       
-                       visiblePages={this.state.visiblePages}
-                       onPageChanged={this.handlePageChanged}/>);
-    }
-});
+class App extends React.Component {
+	constructor(props) {
+		super(props);
 
-React.render(<PagerDemo />, document.body);
+		this.handlePageChanged = this.handlePageChanged.bind(this);
+
+		this.state = {
+			total:       11,
+			current:     7,
+			visiblePage: 3,
+		};
+	}
+
+	handlePageChanged(newPage) {
+		this.setState({ current : newPage });
+	}
+
+	render() {
+		return (
+			<Pager
+				total={this.state.total}
+				current={this.state.current}
+				visiblePages={this.state.visiblePage}
+				titles={{ first: '<|', last: '>|' }}
+				onPageChanged={this.handlePageChanged}
+			/>
+		);
+	}
+}
+
+window.onload = () => {
+	render(React.createElement(App), document.querySelector('#app'));
+};
+
 ```
-
 
 ## How it looks like*
-```
-First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last
-```
+
+![First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last](./img/pager-default.png)
 
 \* Bootstrap 3.0 is required by default, but you can replace it with your own css.
 
 
 ## Demo
-```shell
-gulp demo -p 8003 
-```
-or
-```shell
-./node_modules/.bin/gulp demo -p 8003
-```
+
+Just open demo/inde.html in your browser.
 
 [JSFiddle](http://jsfiddle.net/azaviruha/69z2wepo/4060/)
 
@@ -83,6 +81,11 @@ npm test
 ```
 
 ## Changelog
+### v1.2.0
+* Rewrited all to ES6.
+* Switched from gulp + browserify to webpack.
+* Now officially supports only React >= 15.0.0
+
 ### v1.1.4
 * Updated to React 15. Thanks to contributors!
 

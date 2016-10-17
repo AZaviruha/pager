@@ -1,5 +1,9 @@
+/* global window = true */
+/* global document = true */
+
 import React from 'react';
-import Pager from '../../../src/pager.jsx';
+import { render } from 'react-dom';
+import Pager from '../../dist/pager.js';
 
 class App extends React.Component {
 	constructor(props) {
@@ -31,4 +35,7 @@ class App extends React.Component {
 	}
 }
 
-export default App;
+
+window.onload = () => {
+	render(React.createElement(App), document.querySelector('#app'));
+};

@@ -1,8 +1,10 @@
+var path = require('path');
+
 module.exports = (config) => {
 	config.set({
 		basePath:    './',
 
-		frameworks:  ['browserify', 'jasmine'],
+		frameworks:  ['jasmine'],
 
 		browsers:    ['PhantomJS' /*, 'Chrome'*/],
 
@@ -11,8 +13,7 @@ module.exports = (config) => {
 			'karma-firefox-launcher',
 			'karma-phantomjs-launcher',
 			'karma-jasmine',
-			'karma-babel-preprocessor',
-			'karma-browserify',
+			'karma-webpack'
 		],
 
 		files: [
@@ -20,39 +21,38 @@ module.exports = (config) => {
 		],
 
 		preprocessors: {
-			'src/**/*.jsx': ['babel', 'browserify'],
-			'spec/**/*.jsx': ['babel', 'browserify']
+			'src/**/*.jsx': ['webpack'],
+			'spec/**/*.jsx': ['webpack']
 		},
 
-		babelPreprocessor: {
-			options: {
-				// presets: ['airbnb']
+		webpack: { //kind of a copy of your webpack config
+			module: {
+				loaders: [
+					{
+						test: /\.jsx$/,
+						loader: 'babel',
+						exclude: path.resolve(__dirname, 'node_modules'),
+						query: {
+							presets: ['latest', 'react']
+						}
+					},
+					{
+						test: /\.json$/,
+						loader: 'json',
+					}
+				]
 			},
-		},
-
-		browserify: {
-			debug: true,
-
-			transform: [
-				['babelify'],
-				// ['babelify', { presets: ['airbnb'] }]
-			],
-
-			configure(bundle) {
-				bundle.on('prebundle', () => {
-					bundle.external('react/addons');
-					bundle.external('react/lib/ReactContext');
-					bundle.external('react/lib/ExecutionEnvironment');
-				});
-			},
+			externals: {
+				'react/addons': true,
+				'react/lib/ExecutionEnvironment': true,
+				'react/lib/ReactContext': true
+			}
 		},
 
 		singleRun:   true,
 
 		reporters: ['progress'],
 
-		colors: true,
-
-        // logLevel: config.LOG_DEBUG
+		colors: true
 	});
 };
