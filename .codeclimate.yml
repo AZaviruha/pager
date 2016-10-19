@@ -1,6 +1,13 @@
+engines:
+  eslint:
+    enabled: true
+ratings:
+   paths:
+   - src/pager.jsx
 exclude_paths:
-- "spec/"
-- "demo/"
-- "demo/bundle.js
-- "dist/"
-- "img/"
+- spec/**/*
+- demo/**/*
+- demo/bundle.js
+- dist/**/*
+- img/**/*
+- webpack.config.js
