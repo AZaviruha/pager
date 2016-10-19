@@ -1,6 +1,7 @@
 engines:
   eslint:
     enabled: true
+    channel: "eslint-3"
 ratings:
    paths:
    - src/pager.jsx
@@ -11,3 +12,4 @@ exclude_paths:
 - dist/**/*
 - img/**/*
 - webpack.config.js
+- karma.conf.js
