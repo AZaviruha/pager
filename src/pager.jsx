@@ -190,7 +190,7 @@ class Pager extends React.Component {
 
 		return (
 			<nav>
-				<ul className="pagination">
+				<ul className={"pagination " + this.props.className}>
 					<Page
 						className="btn-first-page"
 						key="btn-first-page"
