@@ -1,6 +1,6 @@
 {
   "name": "react-pager",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Stateless Pager component (for Bootstrap).",
   "main": "dist/pager.js",
   "scripts": {
