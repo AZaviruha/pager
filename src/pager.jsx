@@ -187,10 +187,14 @@ class Pager extends React.Component {
 
 	render() {
 		const titles = this.getTitles.bind(this);
+		let className = "pagination";
+		if (this.props.className) {
+			className += " " + this.props.className;
+		}
 
 		return (
 			<nav>
-				<ul className="pagination">
+				<ul className={className}>
 					<Page
 						className="btn-first-page"
 						key="btn-first-page"
