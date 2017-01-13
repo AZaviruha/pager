@@ -35,6 +35,7 @@ class App extends React.Component {
 				current={this.state.current}
 				visiblePages={this.state.visiblePage}
 				titles={{ first: '<|', last: '>|' }}
+				className="pagination-sm pull-right"
 				onPageChanged={this.handlePageChanged}
 			/>
 		);
@@ -69,6 +70,9 @@ npm test
 
 ## Changelog
 
+### v1.2.1
+* Fixed [#12](https://github.com/AZaviruha/pager/issues/12)
+
 ### v1.2.0
 * Rewrited all to ES6.
 * Switched from gulp + browserify to webpack.
@@ -91,9 +95,8 @@ npm test
 
 
 ## Contributors
-* [tko](https://github.com/tko)
-* [Plummat](https://github.com/Plummat)
-* [lvhntr](https://github.com/lvhntr)
+
+See [contributors](https://github.com/AZaviruha/pager/graphs/contributors).
 
 
 [npm-stats]: https://nodei.co/npm/react-pager.png?compact=true
