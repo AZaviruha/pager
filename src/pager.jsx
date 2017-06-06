@@ -25,6 +25,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 
 /**
@@ -245,11 +246,11 @@ class Pager extends React.Component {
 }
 
 Pager.propTypes = {
-	current:           React.PropTypes.number.isRequired,
-	total:             React.PropTypes.number.isRequired,
-	visiblePages:      React.PropTypes.number.isRequired,
-	titles:            React.PropTypes.object,
-	onPageChanged:     React.PropTypes.func,
+	current:           PropTypes.number.isRequired,
+	total:             PropTypes.number.isRequired,
+	visiblePages:      PropTypes.number.isRequired,
+	titles:            PropTypes.object,
+	onPageChanged:     PropTypes.func,
 };
 
 Pager.defaultProps = {
@@ -271,11 +272,11 @@ const Page = (props) => {
 };
 
 Page.propTypes = {
-	isHidden:   React.PropTypes.bool,
-	isActive:   React.PropTypes.bool,
-	isDisabled: React.PropTypes.bool,
-	className:  React.PropTypes.string,
-	onClick:    React.PropTypes.func,
+	isHidden:   PropTypes.bool,
+	isActive:   PropTypes.bool,
+	isDisabled: PropTypes.bool,
+	className:  PropTypes.string,
+	onClick:    PropTypes.func,
 };
 
 
