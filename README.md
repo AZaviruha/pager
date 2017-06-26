@@ -70,6 +70,11 @@ npm test
 
 ## Changelog
 
+### v1.3.0
+* @kallaspriit fixed [#16](https://github.com/AZaviruha/pager/issues/16)
+* Updates devDependencies
+* Move building procedure to Docker
+
 ### v1.2.1
 * Fixed [#12](https://github.com/AZaviruha/pager/issues/12)
 
