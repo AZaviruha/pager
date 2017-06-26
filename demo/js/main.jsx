@@ -28,7 +28,7 @@ class App extends React.Component {
 				total={this.state.total}
 				current={this.state.current}
 				visiblePages={this.state.visiblePage}
-				titles={{ first: '<|', last: '>|' }}
+				titles={{ first: '<|', last: '|>' }}
 				onPageChanged={this.handlePageChanged}
 			/>
 		);

@@ -30,7 +30,7 @@ module.exports = function (config) {
 				loaders: [
 					{
 						test: /\.jsx$/,
-						loader: 'babel',
+						loader: 'babel-loader',
 						exclude: path.resolve(__dirname, 'node_modules'),
 						query: {
 							presets: ['latest', 'react']
@@ -38,14 +38,17 @@ module.exports = function (config) {
 					},
 					{
 						test: /\.json$/,
-						loader: 'json',
+						loader: 'json-loader',
 					}
 				]
 			},
 			externals: {
+				cheerio: 'window',
 				'react/addons': true,
 				'react/lib/ExecutionEnvironment': true,
-				'react/lib/ReactContext': true
+				'react/lib/ReactContext': true,
+				'react-dom/test-utils': true,
+				'react-test-renderer/shallow': true
 			}
 		},
 
