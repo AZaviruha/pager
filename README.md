@@ -1,8 +1,12 @@
-# Stateless Pager component
+# *DEPRECATED* Stateless Pager component
 [![Code Climate][cc-image]][cc-url]
 [![Build Status][travis-image]][travis-url]<br />
 [![NPM version][npm-stats]][npm-url]
 
+
+## Deprecation notice
+
+Now all my free time is spent on [react-ui-generator](https://github.com/react-ui-generator/react-ui-generator), which is my main project. So, I don't have any more time to maintain this package. Please, fill free to fork this repository.
 
 ## Getting started
 
