@@ -48,7 +48,7 @@ window.onload = () => {
 
 ```
 
-## How it looks like*
+## What it looks like*
 
 ![First | Prev | ... | 6 | 7 | 8 | 9 | ... | Next | Last](./img/pager-default.png)
 
